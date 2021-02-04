@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "node ./node_modules/octopus/scripts/run build"
+    "build": "node ./node_modules/octopus/scripts/run build devmode"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/PharmaLedger-IMI/gtin-resolver#readme",
   "dependencies": {
-    "octopus": "git+http://github.com/privatesky/octopus.git#1.0.4"
+    "octopus": "git+http://github.com/privatesky/octopus.git"
   }
 }
