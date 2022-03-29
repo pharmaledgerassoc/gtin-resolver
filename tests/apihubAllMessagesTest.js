@@ -281,11 +281,11 @@ function prepareTestMessages(messagesVerificationMap) {
     assert.equal(resultMessage.messageType, "UnknownTypeResponse");
   }
   messagesVerificationMap[videoMissingField.messageId] = async function (resultMessage) {
-    assert.equal(resultMessage.response[0].responseType, 9);
+    assert.equal(resultMessage.response[0].responseType, 11);
     assert.equal(resultMessage.messageType, "VideoSourceResponse");
   }
   messagesVerificationMap[videoWrongProductCode.messageId] = async function (resultMessage) {
-    assert.equal(resultMessage.response[0].responseType, 9);
+    assert.equal(resultMessage.response[0].responseType, 11);
     assert.equal(resultMessage.messageType, "VideoSourceResponse");
   }
 

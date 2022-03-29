@@ -108,6 +108,7 @@ async function preapareWallet() {
   env[openDSU.constants.SHARED_ENCLAVE.TYPE] = "WalletDBEnclave";
   env[openDSU.constants.SHARED_ENCLAVE.DID] = enclaveDID;
   env[openDSU.constants.SHARED_ENCLAVE.KEY_SSI] = enclaveKeySSI;
+  await $$.promisify(activeWallet.writeFile)("/environment.json", JSON.stringify(env));
 
   const mainDSU = await $$.promisify(scAPI.getMainDSU)();
   await $$.promisify(mainDSU.writeFile)("/environment.json", JSON.stringify(env));
