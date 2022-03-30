@@ -7,9 +7,11 @@ const {createGTIN_SSI, parseGTIN_SSI} = require("./lib/GTIN_SSI");
 const DSUFabricFeatureManager = require("./lib/DSUFabricFeatureManager");
 const LeafletFeatureManager = require("./lib/LeafletFeatureManager");
 const LeafletInfoService = require("./lib/services/LeafletInfoService");
-const DSUFabricUtilsService = require("./lib/services/DSUFabricUtilsService");
+const DSUFabricUtils = require("./lib/utils/DSUFabricUtils");
 const Languages = require("./lib/constants/Languages");
 const UploadTypes = require("./lib/constants/UploadTypes");
+const XMLDisplayService = require("./lib/services/XMLDisplayService/XMLDisplayService");
+const utils = require("./lib/utils/commonUtils");
 
 module.exports = {
   createGTIN_SSI,
@@ -17,9 +19,11 @@ module.exports = {
   DSUFabricFeatureManager,
   LeafletFeatureManager,
   LeafletInfoService,
-  DSUFabricUtilsService,
+  DSUFabricUtils,
   UploadTypes,
   Languages,
+  utils,
+  XMLDisplayService,
   loadApi: function (apiName) {
     switch (apiName) {
       case "mappings":

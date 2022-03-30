@@ -99,7 +99,8 @@ function prepareTestMessages(messagesVerificationMap) {
     assert.equal(resultMessage.messageType, "ProductResponse");
     dbResult = await $$.promisify(enclaveDB.getRecord)(constants.PRODUCTS_TABLE, testMessageObj.product.productCode);
     assert.true(dbResult !== null);
-    compareMessage = ModelMessageService.getMessageFromModel(dbResult, "product");
+    let modelMsgService = new ModelMessageService("product");
+    compareMessage = modelMsgService.getMessageFromModel(dbResult, "product");
     assert.true(compareMessage !== null);
     Object.keys(compareMessage).forEach(key => {
       if (typeof compareMessage[key] === "object") {
@@ -113,7 +114,7 @@ function prepareTestMessages(messagesVerificationMap) {
     // await $$.promisify(productDSU.load)();
     dsuJson = JSON.parse(await $$.promisify(productDSU.readFile)("product.json"));
     assert.true(dsuJson !== null);
-    compareMessage = ModelMessageService.getMessageFromModel(dsuJson, "product");
+    compareMessage = modelMsgService.getMessageFromModel(dsuJson, "product");
     assert.true(compareMessage !== null);
     Object.keys(compareMessage).forEach(key => {
       if (typeof compareMessage[key] === "object") {
@@ -158,7 +159,8 @@ function prepareTestMessages(messagesVerificationMap) {
     assert.equal(resultMessage.messageType, "BatchResponse");
     dbResult = await $$.promisify(enclaveDB.getRecord)(constants.BATCHES_STORAGE_TABLE, testMessageObj.batch.batch);
     assert.true(dbResult !== null);
-    compareMessage = ModelMessageService.getMessageFromModel(dbResult, "batch");
+    let modelMsgService = new ModelMessageService("batch");
+    compareMessage = modelMsgService.getMessageFromModel(dbResult, "batch");
     assert.true(compareMessage !== null);
     Object.keys(compareMessage).forEach(key => {
       if (typeof compareMessage[key] === "object") {
@@ -171,7 +173,7 @@ function prepareTestMessages(messagesVerificationMap) {
     assert.true(batchDSU !== null);
     dsuJson = JSON.parse(await $$.promisify(batchDSU.readFile)("batch.json"));
     assert.true(dsuJson !== null);
-    compareMessage = ModelMessageService.getMessageFromModel(dsuJson, "batch");
+    compareMessage = modelMsgService.getMessageFromModel(dsuJson, "batch");
     assert.true(compareMessage !== null);
 
     Object.keys(compareMessage).forEach(key => {
