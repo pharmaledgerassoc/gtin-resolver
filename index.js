@@ -8,10 +8,11 @@ const DSUFabricFeatureManager = require("./lib/DSUFabricFeatureManager");
 const LeafletFeatureManager = require("./lib/LeafletFeatureManager");
 const LeafletInfoService = require("./lib/services/LeafletInfoService");
 const DSUFabricUtils = require("./lib/utils/DSUFabricUtils");
-const Languages = require("./lib/constants/Languages");
-const UploadTypes = require("./lib/constants/UploadTypes");
+const Languages = require("./lib/utils/Languages");
+const UploadTypes = require("./lib/utils/UploadTypes");
 const XMLDisplayService = require("./lib/services/XMLDisplayService/XMLDisplayService");
 const utils = require("./lib/utils/commonUtils");
+const constants = require("./lib/constants/constants");
 
 module.exports = {
   createGTIN_SSI,
@@ -23,6 +24,7 @@ module.exports = {
   UploadTypes,
   Languages,
   utils,
+  constants,
   XMLDisplayService,
   loadApi: function (apiName) {
     switch (apiName) {
