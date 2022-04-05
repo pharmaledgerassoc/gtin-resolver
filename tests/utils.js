@@ -84,7 +84,7 @@ async function launchEndpoint() {
   })
 }
 
-async function preapareWallet() {
+async function prepareWallet() {
   const issuerDSU = await $$.promisify(resolver.createSeedDSU)(domain, {});
   const issuerSSI = await $$.promisify(issuerDSU.getKeySSIAsString)();
   const activeWallet = await $$.promisify(resolver.createSeedDSU)(domain, {});
@@ -125,5 +125,5 @@ module.exports = {
   setEndpointMessages,
   launchMainServer,
   launchEndpoint,
-  preapareWallet
+  prepareWallet
 }

@@ -23,7 +23,7 @@ assert.callback("ApiHub test message types and responses", async (finishTest) =>
       {name: "endpoint", url: endpoint.url}
     ]);
 
-    let {enclaveDB, subjectSSI} = await utils.preapareWallet();
+    let {enclaveDB, subjectSSI} = await utils.prepareWallet();
 
     let messagesVerificationMap = {};
 

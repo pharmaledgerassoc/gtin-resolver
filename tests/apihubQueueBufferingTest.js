@@ -16,68 +16,6 @@ const domain = "default";
 const endpoint1NrOfMsgs = 15;
 const endpoint2NrOfMsgs = 12;
 
-async function launchMainServer(endpointsURL) {
-  let apihubConfig = {
-    domains: [{
-      name: domain,
-      config: {
-        "anchoring": {
-          "type": "FS",
-          "option": {
-            "enableBricksLedger": false
-          },
-          "commands": {
-            "addAnchor": "anchor"
-          }
-        },
-        "enable": ["mq", "enclave"]
-      }
-    }],
-    serverConfig: {
-      "activeComponents": [
-        "bdns",
-        "bricksLedger",
-        "bricksFabric",
-        "bricking",
-        "anchoring",
-        "epi-mapping-engine",
-        "epi-mapping-engine-results",
-        "mq"
-      ],
-      "componentsConfig": {
-        "epi-mapping-engine": {
-          "module": require("path").join(__dirname, "../"),
-          "function": "getEPIMappingEngineForAPIHUB"
-        },
-        "epi-mapping-engine-results": {
-          "module": require("path").join(__dirname, "../"),
-          "function": "getEPIMappingEngineMessageResults"
-        }
-      },
-    }
-  };
-  let configDomain = apihubConfig.domains.find(item => item.name === domain);
-  configDomain.config.messagesEndPoints = [];
-  endpointsURL.forEach(endpoint => {
-    configDomain.config.messagesEndPoints.push({
-      "endPointId": endpoint.name,
-      "endPointURL": `${endpoint.url}/mappingEngine/${domain}/default/saveResult`
-    })
-  })
-  apihubConfig.rootFolder = await $$.promisify(createTestFolder)('enclaveBuffering' + Math.floor(Math.random() * 10000));
-  return await $$.promisify(testIntegration.launchConfigurableApiHubTestNode)(apihubConfig);
-
-}
-
-async function launchEndpoint() {
-  return new Promise((resolve, reject) => {
-    const childProcess = require("child_process");
-    const childEndpoint = childProcess.fork("./apihubQueueBufferingChild.js", [], {stdio: [0, 1, 2, "ipc"]});
-    childEndpoint.on("error", reject)
-    childEndpoint.on("message", resolve);
-  })
-}
-
 function setEndpointMessages(endpoint, nrOfMessages, message) {
   let resultArr = [];
   for (let i = 0; i < nrOfMessages; i++) {
@@ -90,48 +28,22 @@ function setEndpointMessages(endpoint, nrOfMessages, message) {
   return resultArr;
 }
 
-assert.callback("ApiHub message bauffering with enclave queue", async (finishTest) => {
-  const endpoint1 = await launchEndpoint();
-  const endpoint2 = await launchEndpoint();
-  let mainNode = await launchMainServer([
+assert.callback("ApiHub message buffering with enclave queue", async (finishTest) => {
+  const utils = require("./utils");
+
+  const endpoint1 = await utils.launchEndpoint();
+  const endpoint2 = await utils.launchEndpoint();
+  let mainNode = await utils.launchMainServer([
     {name: "endpoint1", url: endpoint1.url},
     {name: "endpoint2", url: endpoint2.url}
   ])
 
-  let keySSI = require("opendsu").loadApi("keyssi");
-  let resolver = require("opendsu").loadApi("resolver");
-  let crypto = require("opendsu").loadApi("crypto");
   try {
-    const issuerDSU = await $$.promisify(resolver.createSeedDSU)(domain, {})
-    const issuerSSI = await $$.promisify(issuerDSU.getKeySSIAsString)();
-    const activeWallet = await $$.promisify(resolver.createSeedDSU)(domain, {})
-    const subjectSSI = await $$.promisify(activeWallet.getKeySSIAsObject)();
-    const token = await $$.promisify(crypto.createCredential)(issuerSSI, subjectSSI.derive())
-    await $$.promisify(activeWallet.writeFile)("/myKeys/credential.json", JSON.stringify({credential: token}))
-
-    const openDSU = require("opendsu");
-    const w3cdid = openDSU.loadAPI("w3cdid");
-    const scAPI = openDSU.loadAPI("sc");
-    const enclaveAPI = openDSU.loadAPI("enclave");
-
-    const vaultDomain = await $$.promisify(scAPI.getVaultDomain)();
-    const dsu = await $$.promisify(resolver.createSeedDSU)(vaultDomain, {});
-    const keySSI = await $$.promisify(dsu.getKeySSIAsString)();
-    const enclave = enclaveAPI.initialiseWalletDBEnclave(keySSI);
-    const enclaveDID = await $$.promisify(enclave.getDID)();
-    const enclaveKeySSI = await $$.promisify(enclave.getKeySSI)();
-    let env = {};
-
-    env[openDSU.constants.SHARED_ENCLAVE.TYPE] = "WalletDBEnclave";
-    env[openDSU.constants.SHARED_ENCLAVE.DID] = enclaveDID;
-    env[openDSU.constants.SHARED_ENCLAVE.KEY_SSI] = enclaveKeySSI;
-
+    const {subjectSSI} = await utils.prepareWallet();
 
     let message = messages.find(item => item.messageType === "Product");
 
-
     let testMessages = [...setEndpointMessages("endpoint1", endpoint1NrOfMsgs, message), ...setEndpointMessages("endpoint2", endpoint2NrOfMsgs, message)]
-
 
     const putResult = await $$.promisify(doPut)(`${mainNode.url}/mappingEngine/${domain}/default`, JSON.stringify(testMessages), {headers: {token: subjectSSI.getIdentifier()}});
     let queuePath = require("path").resolve(mainNode.rootFolder);
@@ -146,7 +58,7 @@ assert.callback("ApiHub message bauffering with enclave queue", async (finishTes
       } catch (e) {
         throw e
       }
-    }, 1000)
+    }, 10000)
 
     let interval = setInterval(async () => {
       let enclaveQueue = new enclaveDB(queuePath + "/queue.db");

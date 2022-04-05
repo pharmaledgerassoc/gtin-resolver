@@ -1,7 +1,6 @@
 require('../../privatesky/psknode/bundles/testsRuntime');
 require('../../gtin-resolver/build/bundles/gtinResolver');
 const testIntegration = require("../../privatesky/psknode/tests/util/tir");
-const gtinResolverUtils = require("../lib/utils/utils")
 const domain = "default";
 const dc = require("double-check");
 const {assert, createTestFolder} = dc;

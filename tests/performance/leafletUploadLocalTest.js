@@ -21,7 +21,7 @@ assert.callback("ApiHub leaflet upload performance test", async (finishTest) => 
       {name: "endpoint", url: endpoint.url}
     ]);
 
-    let {enclaveDB, subjectSSI} = await utils.preapareWallet();
+    let {enclaveDB, subjectSSI} = await utils.prepareWallet();
 
     let prodMsg = getMockMessage("Product");
     let prodGoodMsg = utils.setEndpointMessages("endpoint", 1, prodMsg)[0];
