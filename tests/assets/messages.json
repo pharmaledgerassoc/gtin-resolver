@@ -1,7 +1,7 @@
 [
   {
     "messageType": "Product",
-    "messageTypeVersion": 0.1,
+    "messageTypeVersion": 1,
     "senderId": "NOVARTIS_P75_010",
     "receiverId": "ePI_DSU_NOVARTIS",
     "messageId": "00012856374589",
@@ -42,7 +42,7 @@
   },
   {
     "messageType": "Product",
-    "messageTypeVersion": 0.1,
+    "messageTypeVersion": 1,
     "senderId": "NOVARTIS_P75_010",
     "receiverId": "ePI_DSU_NOVARTIS",
     "messageId": "00012856374590",
@@ -77,7 +77,7 @@
   },
   {
     "messageType": "Product",
-    "messageTypeVersion": 0.1,
+    "messageTypeVersion": 1,
     "senderId": "NOVARTIS_P75_010",
     "receiverId": "ePI_DSU_NOVARTIS",
     "messageId": "00012856374591",
@@ -112,7 +112,7 @@
   },
   {
     "messageType": "Product",
-    "messageTypeVersion": 0.1,
+    "messageTypeVersion": 1,
     "senderId": "NOVARTIS_P75_010",
     "receiverId": "ePI_DSU_NOVARTIS",
     "messageId": "00012856374591",
@@ -147,7 +147,7 @@
   },
   {
     "messageType": "Product",
-    "messageTypeVersion": 0.1,
+    "messageTypeVersion": 1,
     "senderId": "NOVARTIS_P75_010",
     "receiverId": "ePI_DSU_NOVARTIS",
     "messageId": "00012856374591",
@@ -182,7 +182,7 @@
   },
   {
     "messageType": "Batch",
-    "messageTypeVersion": 0.1,
+    "messageTypeVersion": 1,
     "senderId": "NOVARTIS_PTT_010",
     "receiverId": "ePI_DSU_NOVARTIS",
     "messageId": "00012856374589",
@@ -220,7 +220,7 @@
   },
   {
     "messageType": "Batch",
-    "messageTypeVersion": 0.1,
+    "messageTypeVersion": 1,
     "senderId": "NOVARTIS_PTT_010",
     "receiverId": "ePI_DSU_NOVARTIS",
     "messageId": "00023856374589",
@@ -250,7 +250,7 @@
   },
   {
     "messageType": "Batch",
-    "messageTypeVersion": 0.1,
+    "messageTypeVersion": 1,
     "senderId": "NOVARTIS_PTT_010",
     "receiverId": "ePI_DSU_NOVARTIS",
     "messageId": "00025856374589",
@@ -276,7 +276,7 @@
   },
   {
     "messageType": "Batch",
-    "messageTypeVersion": 0.1,
+    "messageTypeVersion": 1,
     "senderId": "NOVARTIS_PTT_010",
     "receiverId": "ePI_DSU_NOVARTIS",
     "messageId": "00012856374589",

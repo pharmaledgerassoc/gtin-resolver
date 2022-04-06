@@ -14,6 +14,7 @@ const doPut = $$.promisify(http.doPut);
 const utils = require("./utils");
 const domain = "default";
 const resolver = require("opendsu").loadApi("resolver");
+const config = opendsu.loadAPI("config");
 
 assert.callback("ApiHub test message types and responses", async (finishTest) => {
 
@@ -26,8 +27,8 @@ assert.callback("ApiHub test message types and responses", async (finishTest) =>
     let {enclaveDB, subjectSSI} = await utils.prepareWallet();
 
     let messagesVerificationMap = {};
-
-    let testMessages = prepareTestMessages(messagesVerificationMap);
+    let epiProtocolVersion = await $$.promisify(config.getEnv)("epiProtocolVersion");
+    let testMessages = prepareTestMessages(messagesVerificationMap, epiProtocolVersion);
 
     await $$.promisify(doPut)(`${mainNode.url}/mappingEngine/${domain}/default`, JSON.stringify(testMessages), {headers: {token: subjectSSI.getIdentifier()}});
 
@@ -79,10 +80,11 @@ async function undigestedMessageVerification(resultMessage, responseType, respon
   assert.true(dbResult === null);
 }
 
-function prepareTestMessages(messagesVerificationMap) {
+function prepareTestMessages(messagesVerificationMap, epiProtocolVersion) {
   /*create messages for product*/
 
   let prodMsg = getMockMessage("Product");
+  prodMsg["epiProtocolVersion"] = epiProtocolVersion;
   let prodGoodMsg = utils.setEndpointMessages("endpoint", 1, prodMsg)[0];
   let prodWrongMsgType = utils.setEndpointMessages("endpoint", 1, prodMsg)[0];
   prodWrongMsgType.messageType = "Product Wrong message type";
@@ -100,7 +102,7 @@ function prepareTestMessages(messagesVerificationMap) {
     dbResult = await $$.promisify(enclaveDB.getRecord)(constants.PRODUCTS_TABLE, testMessageObj.product.productCode);
     assert.true(dbResult !== null);
     let modelMsgService = new ModelMessageService("product");
-    compareMessage = modelMsgService.getMessageFromModel(dbResult, "product");
+    compareMessage = modelMsgService.getMessageFromModel(dbResult);
     assert.true(compareMessage !== null);
     Object.keys(compareMessage).forEach(key => {
       if (typeof compareMessage[key] === "object") {
@@ -112,9 +114,11 @@ function prepareTestMessages(messagesVerificationMap) {
     let productDSU = await $$.promisify(resolver.loadDSU)(dbResult.keySSI);
     assert.true(productDSU !== null);
     // await $$.promisify(productDSU.load)();
-    dsuJson = JSON.parse(await $$.promisify(productDSU.readFile)("product.json"));
+
+
+    dsuJson = JSON.parse(await $$.promisify(productDSU.readFile)(`product.epi_v${epiProtocolVersion}`));
     assert.true(dsuJson !== null);
-    compareMessage = modelMsgService.getMessageFromModel(dsuJson, "product");
+    compareMessage = modelMsgService.getMessageFromModel(dsuJson);
     assert.true(compareMessage !== null);
     Object.keys(compareMessage).forEach(key => {
       if (typeof compareMessage[key] === "object") {
@@ -140,6 +144,7 @@ function prepareTestMessages(messagesVerificationMap) {
   /*create messages for batch*/
 
   let batchMsg = getMockMessage("Batch");
+  batchMsg["epiProtocolVersion"] = epiProtocolVersion;
   let batchGoodMsg = utils.setEndpointMessages("endpoint", 1, batchMsg)[0];
   batchGoodMsg.batch.productCode = prodGoodMsg.product.productCode;
   let batchWrongMsgType = utils.setEndpointMessages("endpoint", 1, batchMsg)[0];
@@ -160,7 +165,7 @@ function prepareTestMessages(messagesVerificationMap) {
     dbResult = await $$.promisify(enclaveDB.getRecord)(constants.BATCHES_STORAGE_TABLE, testMessageObj.batch.batch);
     assert.true(dbResult !== null);
     let modelMsgService = new ModelMessageService("batch");
-    compareMessage = modelMsgService.getMessageFromModel(dbResult, "batch");
+    compareMessage = modelMsgService.getMessageFromModel(dbResult);
     assert.true(compareMessage !== null);
     Object.keys(compareMessage).forEach(key => {
       if (typeof compareMessage[key] === "object") {
@@ -171,9 +176,9 @@ function prepareTestMessages(messagesVerificationMap) {
     })
     let batchDSU = await $$.promisify(resolver.loadDSU)(dbResult.keySSI);
     assert.true(batchDSU !== null);
-    dsuJson = JSON.parse(await $$.promisify(batchDSU.readFile)("batch.json"));
+    dsuJson = JSON.parse(await $$.promisify(batchDSU.readFile)(`batch.epi_v${epiProtocolVersion}`));
     assert.true(dsuJson !== null);
-    compareMessage = modelMsgService.getMessageFromModel(dsuJson, "batch");
+    compareMessage = modelMsgService.getMessageFromModel(dsuJson);
     assert.true(compareMessage !== null);
 
     Object.keys(compareMessage).forEach(key => {
@@ -204,6 +209,7 @@ function prepareTestMessages(messagesVerificationMap) {
   /*create messages for productPhoto*/
 
   let photoMsg = getMockMessage("ProductPhoto");
+  photoMsg["epiProtocolVersion"] = epiProtocolVersion;
   let photoGoodMsg = utils.setEndpointMessages("endpoint", 1, photoMsg)[0];
   photoGoodMsg.productCode = prodGoodMsg.product.productCode;
   let photoWrongMsgType = utils.setEndpointMessages("endpoint", 1, photoMsg)[0];
@@ -247,6 +253,7 @@ function prepareTestMessages(messagesVerificationMap) {
   /*create messages for VideoSource*/
 
   let videoMsg = getMockMessage("VideoSource");
+  videoMsg["epiProtocolVersion"] = epiProtocolVersion;
   let videoGoodMsg = utils.setEndpointMessages("endpoint", 1, videoMsg)[0];
   videoGoodMsg.videos.productCode = prodGoodMsg.product.productCode;
   let videoWrongMsgType = utils.setEndpointMessages("endpoint", 1, videoMsg)[0];
@@ -272,7 +279,7 @@ function prepareTestMessages(messagesVerificationMap) {
     let productDSU = await $$.promisify(resolver.loadDSU)(dbResult.keySSI);
     assert.true(productDSU !== null);
     // await $$.promisify(productDSU.load)();
-    dsuJson = JSON.parse(await $$.promisify(productDSU.readFile)("product.json"));
+    dsuJson = JSON.parse(await $$.promisify(productDSU.readFile)(`product.epi_v${epiProtocolVersion}`));
     assert.true(dsuJson !== null);
     assert.true(dsuJson.videos !== null && dsuJson.videos.defaultSource !== null);
     assert.equal(dsuJson.videos.defaultSource, testMessageObj.videos.source);
