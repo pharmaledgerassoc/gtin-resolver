@@ -109,8 +109,8 @@ $$.flows.describe("SchemaValidate", {
   start: async function (callback) {
     this.callback = callback;
 
-    const schemaUtils = require("../lib/utils/schemaUtils");
-    let validationResult = await schemaUtils.validateMessage(message, schema);
+    const validationUtils = require("../lib/utils/validationUtils");
+    let validationResult = await validationUtils.validateMessageOnSchema(message, schema);
     if (!validationResult.valid) {
       validationResult.invalidFields.forEach(item => console.log(item.message));
     }
