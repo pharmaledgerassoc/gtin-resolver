@@ -4,7 +4,7 @@ const testIntegration = require("../../privatesky/psknode/tests/util/tir");
 const opendsu = require('opendsu');
 const fs = require("fs");
 const messages = require("./assets/messageTypes.json");
-const gtinResolverUtils = require("../lib/utils/commonUtils")
+const gtinResolverUtils = require("../lib/utils/CommonUtils")
 const dc = require("double-check");
 const enclaveDB = require("default-enclave");
 

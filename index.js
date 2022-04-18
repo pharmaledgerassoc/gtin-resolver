@@ -11,7 +11,7 @@ const DSUFabricUtils = require("./lib/utils/DSUFabricUtils");
 const Languages = require("./lib/utils/Languages");
 const UploadTypes = require("./lib/utils/UploadTypes");
 const XMLDisplayService = require("./lib/services/XMLDisplayService/XMLDisplayService");
-const utils = require("./lib/utils/commonUtils");
+const utils = require("./lib/utils/CommonUtils");
 const validationUtils = require("./lib/utils/validationUtils");
 const constants = require("./lib/constants/constants");
 
@@ -50,7 +50,7 @@ module.exports = {
     return require("opendsu").loadApi("m2dsu").getErrorsMap();
   },
   getMappingsUtils: function () {
-    return require("./lib/utils/commonUtils");
+    return require("./lib/utils/CommonUtils");
   }
 }
 
