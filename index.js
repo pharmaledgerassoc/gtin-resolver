@@ -42,6 +42,9 @@ module.exports = {
   getEPIMappingEngineMessageResults: function (server) {
     return require("./lib/apihubMappingEngineMessageResults").getEPIMappingEngineMessageResults(server);
   },
+  getWebLeaflet: function (server) {
+    return require("./lib/leaflet-web-api").getWebLeaflet(server);
+  },
   getMessagesPipe: function () {
     const opendsu = require("opendsu");
     return opendsu.loadApi("m2dsu").getMessagesPipe();
