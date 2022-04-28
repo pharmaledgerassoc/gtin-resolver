@@ -4,8 +4,7 @@ Leaflet-web-api is a webservice which can be used by web users in order to retir
 
 # **Credentials**
 
-Request will not require any credentials but must contain a valid Blockchain domain (BDNS). **Optional** - header can contain protocol
-version (ex epiProtocolVersion = 1). If not prezent in request header - default version 1 will be used.
+Request will not require any credentials but must contain a valid Blockchain domain (BDNS).
 
 # **Request a complete leaflet**
 
