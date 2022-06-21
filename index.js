@@ -13,6 +13,7 @@ const UploadTypes = require("./lib/utils/UploadTypes");
 const XMLDisplayService = require("./lib/services/XMLDisplayService/XMLDisplayService");
 const utils = require("./lib/utils/CommonUtils");
 const validationUtils = require("./lib/utils/ValidationUtils");
+const versionTransformer = require("./lib/EpiVersionTransformer")
 const constants = require("./lib/constants/constants");
 
 module.exports = {
@@ -26,6 +27,7 @@ module.exports = {
   Languages,
   utils,
   validationUtils,
+  versionTransformer,
   constants,
   XMLDisplayService,
   loadApi: function (apiName) {
