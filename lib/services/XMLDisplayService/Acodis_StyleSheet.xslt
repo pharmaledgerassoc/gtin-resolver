@@ -20,15 +20,22 @@
         </html>
     </xsl:template>
 
+    <xsl:template match="root/p[@class='Type']">
+        <div style="display:none;" class="ignored_from_ui">
+            <xsl:apply-templates select="node()">
+            </xsl:apply-templates>
+        </div>
+    </xsl:template>
+
     <xsl:template match="root/p[@class='Product_Name']">
-        <h1>
+        <h1 style="display:none;" class="ignored_from_ui">
             <xsl:apply-templates select="node()">
             </xsl:apply-templates>
         </h1>
     </xsl:template>
 
     <xsl:template match="root/p[@class='Ingredient Substance']">
-        <p class="ingredient_substance">
+        <p class="ingredient_substance ignored_from_ui" style="display:none;">
             <span>
                 <b><xsl:value-of select="@class"/>:</b>&#160;<xsl:apply-templates select="@*|node()"></xsl:apply-templates>
             </span>
@@ -36,43 +43,43 @@
     </xsl:template>
 
     <xsl:template match="root/p[@class='Read Instructions'][1]">
-        <xsl:text disable-output-escaping='yes'>&lt;div class="read_instructions" &gt;</xsl:text>
-        <p><xsl:apply-templates select="node()" /></p>
+        <xsl:text disable-output-escaping='yes'>&lt;div class="read_instructions" style="display:none;" class="ignored_from_ui" &gt;</xsl:text>
+        <p style="display:none;" class="ignored_from_ui"><xsl:apply-templates select="node()" /></p>
     </xsl:template>
 
     <xsl:template match="root/p[@class='Read Instructions'][position()>1 and position()&lt;last()]">
-        <p><xsl:apply-templates select="node()" /></p>
+        <p style="display:none;" class="ignored_from_ui"><xsl:apply-templates select="node()" /></p>
     </xsl:template>
 
     <xsl:template match="root/p[@class='Read Instructions'][last()]">
-        <p><xsl:apply-templates select="node()" /></p>
+        <p style="display:none;" class="ignored_from_ui"><xsl:apply-templates select="node()" /></p>
         <xsl:text disable-output-escaping='yes'>&lt;/div&gt;</xsl:text>
     </xsl:template>
 
     <xsl:template match="root/p[@class='Table of Content'][1]">
-        <xsl:text disable-output-escaping='yes'>&lt;div class="table_of_content" &gt;</xsl:text>
-        <h2><xsl:apply-templates select="node()" /></h2>
+        <xsl:text disable-output-escaping='yes'>&lt;div class="table_of_content ignored_from_ui" style="display:none;" &gt;</xsl:text>
+        <h2 style="display:none;" class="ignored_from_ui"><xsl:apply-templates select="node()" /></h2>
     </xsl:template>
 
     <xsl:template match="root/p[@class='Table of Content'][position()>1 and position()&lt;last()]">
-        <p><xsl:apply-templates select="node()" /></p>
+        <p style="display:none;" class="ignored_from_ui"><xsl:apply-templates select="node()" /></p>
     </xsl:template>
 
     <xsl:template match="root/p[@class='Table of Content'][last()]">
-        <p><xsl:apply-templates select="node()" /></p>
+        <p style="display:none;" class="ignored_from_ui"><xsl:apply-templates select="node()" /></p>
         <xsl:text disable-output-escaping='yes'>&lt;/div&gt;</xsl:text>
     </xsl:template>
 
     <xsl:template match="root/section">
         <div class="section">
-        <xsl:apply-templates select="node()" />
+            <xsl:apply-templates select="node()" />
         </div>
     </xsl:template>
 
     <xsl:template match="root/section/header">
-        <h2>
+        <h1>
             <xsl:apply-templates select="node()" />
-        </h2>
+        </h1>
     </xsl:template>
 
     <xsl:template match="root/section/p">
@@ -101,6 +108,10 @@
 
     <xsl:template match="//figure">
         <figure><xsl:apply-templates select="node()" /></figure>
+    </xsl:template>
+
+    <xsl:template match="//figure/p">
+        <p style="display:none;" class="ignored_from_ui"><xsl:apply-templates select="node()" /></p>
     </xsl:template>
 
     <xsl:template match="//table">
