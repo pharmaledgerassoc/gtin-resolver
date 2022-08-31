@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="document" type="documentType"/>
+    <xs:complexType name="pType" mixed="true">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element type="imgType" name="img"/>
+            <xs:element type="pType" name="p"/>
+            <xs:element type="liType" name="li"/>
+            <xs:element type="italic" name="i"/>
+            <xs:element type="bType" name="b"/>
+            <xs:element type="underline" name="u"/>
+            <xs:element type="italic" name="ins"/>
+            <xs:element type="sscript" name="sub"/>
+            <xs:element type="sscript" name="sup"/>
+            <xs:element type="xs:string" name="br"/>
+        </xs:choice>
+        <xs:anyAttribute processContents="skip"/>
+    </xs:complexType>
+    <xs:complexType name="headerType" mixed="true">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element type="pType" name="p" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="xs:string" name="br" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="italic" name="i" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="bType" name="b" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="underline" name="u" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="italic" name="ins" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="sscript" name="sub" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="sscript" name="sup" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="liType" mixed="true">
+        <xs:sequence>
+            <xs:element type="pType" name="p" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="ulType" name="ul" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="olType" name="ol" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="italic" name="i" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="bType" name="b" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="underline" name="u" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="italic" name="ins" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="sscript" name="sub" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="sscript" name="sup" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:anyAttribute processContents="skip"/>
+    </xs:complexType>
+    <xs:complexType name="ulType" mixed="true">
+        <xs:sequence>
+            <xs:element type="xs:string" name="br" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="imgType" name="img" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="pType" name="p" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="liType" name="li" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="italic" name="i" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="bType" name="b" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="underline" name="u" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="italic" name="ins" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="sscript" name="sub" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="sscript" name="sup" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:anyAttribute processContents="skip"/>
+    </xs:complexType>
+    <xs:complexType name="sectionType" mixed="true">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element type="headerType" name="header"/>
+            <xs:element type="pType" name="p"/>
+            <xs:element type="ulType" name="ul"/>
+            <xs:element type="tableType" name="table"/>
+            <xs:element type="figureType" name="figure"/>
+            <xs:element type="olType" name="ol"/>
+            <xs:element type="xs:string" name="br" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:choice>
+        <xs:anyAttribute processContents="skip"/>
+    </xs:complexType>
+    <xs:complexType name="tdType" mixed="true">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element type="pType" name="p"/>
+            <xs:element type="ulType" name="ul"/>
+            <xs:element type="olType" name="ol"/>
+            <xs:element type="imgType" name="img"/>
+            <xs:element type="figureType" name="figure"/>
+            <xs:element type="italic" name="i"/>
+            <xs:element type="bType" name="b"/>
+            <xs:element type="underline" name="u"/>
+            <xs:element type="italic" name="ins"/>
+            <xs:element type="sscript" name="sub"/>
+            <xs:element type="sscript" name="sup"/>
+            <xs:element type="xs:string" name="br"/>
+        </xs:choice>
+        <xs:anyAttribute processContents="skip"/>
+    </xs:complexType>
+    <xs:complexType name="trType" mixed="true">
+        <xs:sequence>
+            <xs:element type="tdType" name="td" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:anyAttribute processContents="skip"/>
+    </xs:complexType>
+    <xs:complexType name="tableType" mixed="true">
+        <xs:sequence>
+            <xs:element type="trType" name="tr" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="liType" name="li" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="italic" name="i" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="bType" name="b" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="underline" name="u" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="italic" name="ins" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="sscript" name="sub" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="sscript" name="sup" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:anyAttribute processContents="skip"/>
+    </xs:complexType>
+    <xs:complexType name="imgType" mixed="true">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:anyAttribute processContents="skip"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="figureType" mixed="true">
+        <xs:sequence>
+            <xs:element type="imgType" name="img" minOccurs="0"/>
+            <xs:element type="ulType" name="ul" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="olType" name="ol" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="pType" name="p" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="liType" name="li" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="italic" name="i" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="bType" name="b" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="underline" name="u" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="italic" name="ins" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="sscript" name="sub" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="sscript" name="sup" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:anyAttribute processContents="skip"/>
+    </xs:complexType>
+    <xs:complexType name="olType" mixed="true">
+        <xs:sequence>
+            <xs:element type="imgType" name="img" minOccurs="0"/>
+            <xs:element type="pType" name="p" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="liType" name="li" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="italic" name="i" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="bType" name="b" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="underline" name="u" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="italic" name="ins" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="sscript" name="sub" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="sscript" name="sup" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="xs:string" name="br" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:anyAttribute processContents="skip"/>
+    </xs:complexType>
+    <xs:complexType name="bType" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="i" type="italic"/>
+            <xs:element name="em" type="italic"/>
+            <xs:element name="u" type="underline"/>
+            <xs:element name="ins" type="underline"/>
+            <xs:element name="sub" type="sscript"/>
+            <xs:element name="sup" type="sscript"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="italic" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="b" type="bType"/>
+            <xs:element name="strong" type="bType"/>
+            <xs:element name="u" type="underline"/>
+            <xs:element name="ins" type="underline"/>
+            <xs:element name="sub" type="sscript"/>
+            <xs:element name="sup" type="sscript"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="underline" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="b" type="bType"/>
+            <xs:element name="strong" type="bType"/>
+            <xs:element name="i" type="italic"/>
+            <xs:element name="em" type="italic"/>
+            <xs:element name="sub" type="sscript"/>
+            <xs:element name="sup" type="sscript"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="sscript" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="b" type="bType"/>
+            <xs:element name="strong" type="bType"/>
+            <xs:element name="i" type="italic"/>
+            <xs:element name="em" type="italic"/>
+            <xs:element name="u" type="underline"/>
+            <xs:element name="ins" type="underline"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="documentType" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element type="sectionType" name="section"/>
+            <xs:element type="headerType" name="header"/>
+            <xs:element name="b" type="bType"/>
+            <xs:element type="pType" name="p"/>
+            <xs:element type="ulType" name="ul"/>
+            <xs:element type="olType" name="ol"/>
+            <xs:element type="tableType" name="table"/>
+            <xs:element type="figureType" name="figure"/>
+            <xs:element type="imgType" name="img"/>
+            <xs:element type="xs:string" name="br"/>
+        </xs:choice>
+        <xs:attribute type="xs:string" name="type" use="required" fixed="pharmaledger-1.0"/>
+    </xs:complexType>
+</xs:schema>
