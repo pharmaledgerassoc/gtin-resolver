@@ -12,6 +12,7 @@ const Languages = require("./lib/utils/Languages");
 const UploadTypes = require("./lib/utils/UploadTypes");
 const XMLDisplayService = require("./lib/services/XMLDisplayService/XMLDisplayService");
 const utils = require("./lib/utils/CommonUtils");
+const logUtils = require("./lib/utils/LogUtils");
 const validationUtils = require("./lib/utils/ValidationUtils");
 const versionTransformer = require("./lib/EpiVersionTransformer")
 const constants = require("./lib/constants/constants");
@@ -26,6 +27,7 @@ module.exports = {
   UploadTypes,
   Languages,
   utils,
+  logUtils,
   validationUtils,
   versionTransformer,
   constants,
