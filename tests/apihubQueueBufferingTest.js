@@ -6,7 +6,7 @@ const fs = require("fs");
 const messages = require("./assets/messageTypes.json");
 const gtinResolverUtils = require("../lib/utils/CommonUtils")
 const dc = require("double-check");
-const enclaveDB = require("default-enclave");
+const enclaveDB = require("loki-enclave-facade");
 
 const {assert, createTestFolder} = dc;
 const http = opendsu.loadApi("http");
