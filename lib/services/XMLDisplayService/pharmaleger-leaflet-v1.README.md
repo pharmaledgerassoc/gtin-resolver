@@ -2,6 +2,23 @@
 
 Link to the XSD: [PharmaLedger ePI XSD](./pharmaleger-leaflet-v1.xsd)
 
+## Sections
+
+Due to the design how the ePI leaflet is shown on the app, only section headers and their content are considered for display
+e.g.
+
+```   
+<section level="1">
+	<header>
+		<b>1. What xxx is and what it is used for</b>
+	</header>
+	<p>xxx contains three active substances....</p> 
+</section>
+```
+
+All other information can be part of the XML e.g. product name, Ingredient Substance 
+but those information are not part of the display on the app. 
+
 ## Hide Elements
 
 If your XML contains information which shouldn’t be displayed on the leaflet, please add one or multiple of those class attributes:
