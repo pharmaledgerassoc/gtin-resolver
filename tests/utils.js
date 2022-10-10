@@ -89,7 +89,8 @@ async function prepareWallet() {
   const issuerSSI = await $$.promisify(issuerDSU.getKeySSIAsString)();
   const activeWallet = await $$.promisify(resolver.createSeedDSU)(domain, {});
   const subjectSSI = await $$.promisify(activeWallet.getKeySSIAsObject)();
-  const token = await $$.promisify(crypto.createCredential)(issuerSSI, subjectSSI.derive())
+  const derivedSubjectSSI = await $$.promisify(subjectSSI.derive)();
+  const token = await $$.promisify(crypto.createCredential)(issuerSSI, derivedSubjectSSI)
   await $$.promisify(activeWallet.writeFile)("/myKeys/credential.json", JSON.stringify({credential: token}))
 
   const openDSU = require("opendsu");
