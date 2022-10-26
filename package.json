@@ -17,6 +17,6 @@
     },
     "homepage": "https://github.com/PharmaLedger-IMI/gtin-resolver#readme",
     "dependencies": {
-        "octopus": "git+http://github.com/privatesky/octopus.git"
+        "octopus": "git+http://github.com/octopus/octopus.git"
     }
 }
