@@ -1,6 +1,6 @@
 # **Overview**
 
-Leaflet-web-api is a webservice which can be used by web users in order to retireve leaflets.
+Leaflet-web-api is a webservice which can be used by web users in order to retrieve leaflets.
 
 # **Credentials**
 

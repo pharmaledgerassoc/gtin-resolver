@@ -49,6 +49,9 @@ module.exports = {
   getWebLeaflet: function (server) {
     return require("./lib/leaflet-web-api").getWebLeaflet(server);
   },
+  getGTINOwner: function (server){
+    return require("./lib/gtinOwner").getGTINOwner(server);
+  },
   getMessagesPipe: function () {
     const opendsu = require("opendsu");
     return opendsu.loadApi("m2dsu").getMessagesPipe();
