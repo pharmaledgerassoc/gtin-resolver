@@ -1,6 +1,6 @@
-require('../../privatesky/psknode/bundles/testsRuntime');
+require('../../opendsu-sdk/psknode/bundles/testsRuntime');
 require('../../gtin-resolver/build/bundles/gtinResolver');
-const testIntegration = require("../../privatesky/psknode/tests/util/tir");
+const testIntegration = require("../../opendsu-sdk/psknode/tests/util/tir");
 const domain = "default";
 const dc = require("double-check");
 const {assert, createTestFolder} = dc;

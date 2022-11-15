@@ -1,7 +1,7 @@
-require("../../privatesky/psknode/bundles/testsRuntime");
+require("../../opendsu-sdk/psknode/bundles/testsRuntime");
 require("../../gtin-resolver/build/bundles/gtinResolver");
 
-const tir = require("../../privatesky/psknode/tests/util/tir");
+const tir = require("../../opendsu-sdk/psknode/tests/util/tir");
 const dc = require('double-check');
 
 const assert = require("double-check").assert;

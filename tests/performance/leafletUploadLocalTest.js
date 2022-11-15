@@ -1,6 +1,6 @@
-require('../../../privatesky/psknode/bundles/testsRuntime');
+require('../../../opendsu-sdk/psknode/bundles/testsRuntime');
 require('../../build/bundles/gtinResolver');
-const testIntegration = require("../../../privatesky/psknode/tests/util/tir");
+const testIntegration = require("../../../opendsu-sdk/psknode/tests/util/tir");
 const childProcess = require("child_process");
 const messages = require("../assets/messageTypes.json");
 const opendsu = require('opendsu');

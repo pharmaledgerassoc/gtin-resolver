@@ -1,4 +1,4 @@
-require("../../privatesky/psknode/bundles/testsRuntime");
+require("../../opendsu-sdk/psknode/bundles/testsRuntime");
 require("callflow").initialise();
 const assert = require("double-check").assert;
 
