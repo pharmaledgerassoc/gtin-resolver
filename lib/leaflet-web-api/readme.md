@@ -26,9 +26,17 @@ If batch id is provided and there is no batch specific leaflet/smpc result will 
 # **Result**
 
 Result is a JSON that will contain 2 fields:
- - xmlContent - a string with leaflet xml file content
- - leafletImages - an object containing base64 images of the leaflet, (the key is the image name form leaflet)
+ - resultStatus - a string for result with possible values xml_found | no_xml_for_lang
+ - xmlContent - a string with leaflet xml file content returned if resultStatus is "xml_found"
+ - productData - an object containing additional metadata about product and batch returned if resultStatus is "xml_found"
+ - leafletImages - an object containing base64 images of the leaflet (the key is the image name form leaflet)
+ - availableLanguages - an array of available leaflet languages will be returned in response only if resultStatus is "no_xml_for_lang"
 
+# ** HTTP Result codes**
+ - 200 - an leaflet was found or there are available leaflets for other languages
+ - 400 - missing mandatory parameter form request 
+ - 404 - no leaflet was found and no available leaflet for other languages 
+ - 500 - a network error
 **Example:**
 
 {
