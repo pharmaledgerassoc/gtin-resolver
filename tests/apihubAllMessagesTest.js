@@ -162,7 +162,7 @@ function prepareTestMessages(messagesVerificationMap, epiProtocolVersion) {
     let compareMessage;
     assert.equal(resultMessage.response[0].responseType, 100);
     assert.equal(resultMessage.messageType, "BatchResponse");
-    dbResult = await $$.promisify(enclaveDB.getRecord)(constants.BATCHES_STORAGE_TABLE, testMessageObj.batch.batch);
+    dbResult = await $$.promisify(enclaveDB.getRecord)(constants.BATCHES_STORAGE_TABLE, gtinResolverUtils.getBatchMetadataPK(testMessageObj.batch.productCode, testMessageObj.batch.batch));
     assert.true(dbResult !== null);
     let modelMsgService = new ModelMessageService("batch");
     compareMessage = modelMsgService.getMessageFromModel(dbResult);
@@ -192,16 +192,16 @@ function prepareTestMessages(messagesVerificationMap, epiProtocolVersion) {
     })
   }
   messagesVerificationMap[batchWrongMsgType.messageId] = async function (resultMessage, testMessageObj, enclaveDB) {
-    undigestedMessageVerification(resultMessage, "UnknownTypeResponse", 5, constants.BATCHES_STORAGE_TABLE, testMessageObj.batch.batch, enclaveDB);
+    undigestedMessageVerification(resultMessage, "UnknownTypeResponse", 5, constants.BATCHES_STORAGE_TABLE, gtinResolverUtils.getBatchMetadataPK(testMessageObj.batch.productCode, testMessageObj.batch.batch), enclaveDB);
   }
   messagesVerificationMap[batchWrongFieldType.messageId] = async function (resultMessage, testMessageObj, enclaveDB) {
-    undigestedMessageVerification(resultMessage, "BatchResponse", 1, constants.BATCHES_STORAGE_TABLE, testMessageObj.batch.batch, enclaveDB);
+    undigestedMessageVerification(resultMessage, "BatchResponse", 1, constants.BATCHES_STORAGE_TABLE, gtinResolverUtils.getBatchMetadataPK(testMessageObj.batch.productCode, testMessageObj.batch.batch), enclaveDB);
   }
   messagesVerificationMap[batchMissingField.messageId] = async function (resultMessage, testMessageObj, enclaveDB) {
-    undigestedMessageVerification(resultMessage, "BatchResponse", 1, constants.BATCHES_STORAGE_TABLE, testMessageObj.batch.batch, enclaveDB);
+    undigestedMessageVerification(resultMessage, "BatchResponse", 1, constants.BATCHES_STORAGE_TABLE, gtinResolverUtils.getBatchMetadataPK(testMessageObj.batch.productCode, testMessageObj.batch.batch), enclaveDB);
   }
   messagesVerificationMap[batchWrongProductCode.messageId] = async function (resultMessage, testMessageObj, enclaveDB) {
-    undigestedMessageVerification(resultMessage, "BatchResponse", 7, constants.BATCHES_STORAGE_TABLE, testMessageObj.batch.batch, enclaveDB);
+    undigestedMessageVerification(resultMessage, "BatchResponse", 7, constants.BATCHES_STORAGE_TABLE, gtinResolverUtils.getBatchMetadataPK(testMessageObj.batch.productCode, testMessageObj.batch.batch), enclaveDB);
   }
 
   let batchMessages = [batchGoodMsg, batchWrongMsgType, batchWrongFieldType, batchMissingField, batchWrongProductCode];
