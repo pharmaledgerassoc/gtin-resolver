@@ -3,6 +3,17 @@
   "dependencies": [],
   "build": [
     {
+      "name": "psk-dbf",
+      "src": "https://github.com/opendsu/psk-dbf.git",
+      "actions": [
+        {
+          "type": "smartClone",
+          "target": "modules",
+          "collectLog": false
+        }
+      ]
+    },
+    {
       "name": "Bundles",
       "src": "",
       "actions": [
