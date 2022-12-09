@@ -1,7 +1,7 @@
 [
   {
     "messageType": "Product",
-    "messageTypeVersion": 0.1,
+    "messageTypeVersion": 1,
     "senderId": "devuser",
     "receiverId": "",
     "messageId": "3486721729134",
@@ -39,7 +39,7 @@
   },
   {
     "messageType": "Batch",
-    "messageTypeVersion": 0.1,
+    "messageTypeVersion": 1,
     "senderId": "NOVARTIS_P75_010",
     "receiverId": "ePI_DSU_NOVARTIS",
     "messageId": "0001285637113",
@@ -78,7 +78,7 @@
   },
   {
     "messageType": "VideoSource",
-    "messageTypeVersion": 0.1,
+    "messageTypeVersion": 1,
     "senderId": "devuser",
     "receiverId": "",
     "messageId": "4468524919608",
@@ -92,7 +92,7 @@
   },
   {
     "messageType": "ProductPhoto",
-    "messageTypeVersion": 0.1,
+    "messageTypeVersion": 1,
     "senderId": "devuser",
     "receiverId": "",
     "messageId": "7549792978613",
