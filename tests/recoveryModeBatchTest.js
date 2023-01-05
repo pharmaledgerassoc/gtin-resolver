@@ -146,59 +146,61 @@ function buildTestFunction(gtinSSI, initialMessage, updateMessage) {
                 if (err) {
                     throw err;
                 }
+                mappingEngine.digestMessages(buildProductMessage()).then((undigested) => {
+                    //first step let's create a product based on a good message
+                    mappingEngine.digestMessages(initialMessage).then((undigested) => {
+                        assert.true(undigested.length === 0, "Mapping engine not able to properly digest our message");
 
-                //first step let's create a product based on a good message
-                mappingEngine.digestMessages(initialMessage).then((undigested) => {
-                    assert.true(undigested.length === 0, "Mapping engine not able to properly digest our message");
+                        //all good until now... let's alter the "history"... we delete some bricks from brick storage
+                        deleteConstDSUBrickMap(gtinSSI, folder, (err, deletedBricksCount) => {
+                            if (err) {
+                                throw err;
+                            }
 
-                    //all good until now... let's alter the "history"... we delete some bricks from brick storage
-                    deleteConstDSUBrickMap(gtinSSI, folder, (err, deletedBricksCount) => {
-                        if (err) {
-                            throw err;
-                        }
+                            assert.true(deletedBricksCount === 1, "Not able to delete brickMap of product const dsu");
 
-                        assert.true(deletedBricksCount === 1, "Not able to delete brickMap of product const dsu");
+                            //we need to invalidate DSUCache because if Const dsu fails the resolver tries to create a const dsu and adds it to the DSUCache
+                            resolver.invalidateDSUCache(gtinSSI, () => {
+                                mappingEngine.digestMessages(updateMessage).then((undigested) => {
+                                    assert.true(undigested.length === 1, "Mapping engine should fail to digest this message due to history alteration");
 
-                        //we need to invalidate DSUCache because if Const dsu fails the resolver tries to create a const dsu and adds it to the DSUCache
-                        resolver.invalidateDSUCache(gtinSSI, () => {
-                            mappingEngine.digestMessages(updateMessage).then((undigested) => {
-                                assert.true(undigested.length === 1, "Mapping engine should fail to digest this message due to history alteration");
+                                    //we activate the force flag on the message and try again
+                                    updateMessage.force = true;
 
-                                //we activate the force flag on the message and try again
-                                updateMessage.force = true;
+                                    //we need to invalidate DSUCache because if Const dsu fails the resolver tries to create a const dsu and adds it to the DSUCache
+                                    resolver.invalidateDSUCache(gtinSSI, () => {
+                                        mappingEngine.digestMessages(updateMessage).then((undigested) => {
+                                            assert.true(undigested.length === 0, "Mapping engine not able to properly digest our message with the force flag!");
+                                            openDSU.loadApi("resolver").invalidateDSUCache(gtinSSI, () => {
 
-                                //we need to invalidate DSUCache because if Const dsu fails the resolver tries to create a const dsu and adds it to the DSUCache
-                                resolver.invalidateDSUCache(gtinSSI, () => {
-                                    mappingEngine.digestMessages(updateMessage).then((undigested) => {
-                                        assert.true(undigested.length === 0, "Mapping engine not able to properly digest our message with the force flag!");
-                                        openDSU.loadApi("resolver").invalidateDSUCache(gtinSSI, () => {
-
-                                            resolver.loadDSU(gtinSSI, (err, productConstDSU) => {
-                                                if (err) {
-                                                    throw err;
-                                                }
-                                                productConstDSU.readFile("/manifest", (err, manifest) => {
+                                                resolver.loadDSU(gtinSSI, (err, productConstDSU) => {
                                                     if (err) {
                                                         throw err;
                                                     }
+                                                    productConstDSU.readFile("/manifest", (err, manifest) => {
+                                                        if (err) {
+                                                            throw err;
+                                                        }
 
-                                                    assert.true(typeof manifest !== "undefined");
-                                                    testFinishCallback();
+                                                        assert.true(typeof manifest !== "undefined");
+                                                        testFinishCallback();
+                                                    });
                                                 });
                                             });
+                                        }).catch(err => {
+                                            throw err;
                                         });
-                                    }).catch(err => {
-                                        throw err;
                                     });
+                                }).catch(err => {
+                                    throw err;
                                 });
-                            }).catch(err => {
-                                throw err;
                             });
                         });
+                    }).catch(err => {
+                        throw err;
                     });
-                }).catch(err => {
-                    throw err;
                 });
+
             });
         };
         if (process.port) {
@@ -221,14 +223,10 @@ function buildTestFunction(gtinSSI, initialMessage, updateMessage) {
     }
 }
 
-
-let initialProductMessage = buildProductMessage();
-let updateProductMessage = buildProductMessage();
-updateProductMessage.product.strength = "80mg";
-
-let productTest = buildTestFunction(productGtinSSI, initialProductMessage, updateProductMessage);
-
-assert.callback("Recovery Mode for Product based messages", productTest, 1000000);
+let initialBatchMessage = buildBatchMessage();
+let updateBatchMessage = buildBatchMessage();
+updateBatchMessage.batch.expiryDate = "231200";
+assert.callback("Recovery Mode for Product based messages", buildTestFunction(batchGtinSSI, initialBatchMessage, updateBatchMessage), 1000000);
 
 
 
