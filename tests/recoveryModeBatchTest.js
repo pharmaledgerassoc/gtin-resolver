@@ -117,23 +117,54 @@ function getBrickFilePath(folder, hashLink) {
 }
 
 function buildTestFunction(gtinSSI, initialMessage, updateMessage) {
-    function deleteConstDSUBrickMap(gtinSSI, folder, callback) {
+    function deleteMutableDSUBrickMap(gtinSSI, folder, callback){
+        const openDSU = require("opendsu");
+        const resolver = openDSU.loadApi("resolver");
+
+        resolver.loadDSU(gtinSSI, (err, dsu)=>{
+            if(err){
+                return callback(err);
+            }
+
+            dsu.listMountedDSUs("/", (err, mounts)=>{
+                if(err){
+                    return callback(err);
+                }
+                let target = mounts[0].identifier;
+                target = openDSU.loadApi("keyssi").parse(target);
+
+                target.getAnchorId((err, anchorId)=>{
+                    if(err){
+                        return callback(err);
+                    }
+
+                    deleteDSUBrickMap(anchorId, 1, folder, callback);
+                });
+            });
+        });
+    }
+
+    function deleteDSUBrickMap(keySSI, startIndex, folder, callback) {
         const openDSU = require("opendsu");
         const anchoringX = openDSU.loadApi("anchoring").getAnchoringX();
 
-        anchoringX.getAllVersions(gtinSSI, (err, versions) => {
+        anchoringX.getAllVersions(keySSI, (err, versions) => {
             if (err) {
                 return callback(err);
             }
 
             let deleteCounter = 0;
-            for (let i = 0; i < versions.length; i++) {
+            for (let i = startIndex; i < versions.length; i++) {
                 let brickFilePath = getBrickFilePath(folder, versions[i].getHash());
                 fs.unlinkSync(brickFilePath);
                 deleteCounter++;
             }
             callback(undefined, deleteCounter);
         });
+    }
+
+    function deleteConstDSUBrickMap(gtinSSI, folder, callback) {
+        deleteDSUBrickMap(gtinSSI, 0, folder, callback);
     }
 
     return (testFinishCallback) => {
@@ -146,53 +177,65 @@ function buildTestFunction(gtinSSI, initialMessage, updateMessage) {
                 if (err) {
                     throw err;
                 }
+
+                //first step let's create a product based on a good message
                 mappingEngine.digestMessages(buildProductMessage()).then((undigested) => {
-                    //first step let's create a product based on a good message
+
+                    assert.true(undigested.length === 0, "Mapping engine not able to properly digest our message");
+
+                    //let's create a batch based on a good message
                     mappingEngine.digestMessages(initialMessage).then((undigested) => {
                         assert.true(undigested.length === 0, "Mapping engine not able to properly digest our message");
 
                         //all good until now... let's alter the "history"... we delete some bricks from brick storage
-                        deleteConstDSUBrickMap(gtinSSI, folder, (err, deletedBricksCount) => {
+                        deleteMutableDSUBrickMap(gtinSSI, folder, (err, deletedBricksCount) => {
                             if (err) {
                                 throw err;
                             }
 
                             assert.true(deletedBricksCount === 1, "Not able to delete brickMap of product const dsu");
+                            deleteConstDSUBrickMap(gtinSSI, folder, (err, deletedBricksCount) => {
+                                if (err) {
+                                    throw err;
+                                }
 
-                            //we need to invalidate DSUCache because if Const dsu fails the resolver tries to create a const dsu and adds it to the DSUCache
-                            resolver.invalidateDSUCache(gtinSSI, () => {
-                                mappingEngine.digestMessages(updateMessage).then((undigested) => {
-                                    assert.true(undigested.length === 1, "Mapping engine should fail to digest this message due to history alteration");
+                                assert.true(deletedBricksCount === 1, "Not able to delete brickMap of product const dsu");
 
-                                    //we activate the force flag on the message and try again
-                                    updateMessage.force = true;
+                                //we need to invalidate DSUCache because if Const dsu fails the resolver tries to create a const dsu and adds it to the DSUCache
+                                resolver.invalidateDSUCache(gtinSSI, () => {
+                                    mappingEngine.digestMessages(updateMessage).then((undigested) => {
+                                        assert.true(undigested.length === 1, "Mapping engine should fail to digest this message due to history alteration");
 
-                                    //we need to invalidate DSUCache because if Const dsu fails the resolver tries to create a const dsu and adds it to the DSUCache
-                                    resolver.invalidateDSUCache(gtinSSI, () => {
-                                        mappingEngine.digestMessages(updateMessage).then((undigested) => {
-                                            assert.true(undigested.length === 0, "Mapping engine not able to properly digest our message with the force flag!");
-                                            openDSU.loadApi("resolver").invalidateDSUCache(gtinSSI, () => {
+                                        //we activate the force flag on the message and try again
+                                        updateMessage.force = true;
 
-                                                resolver.loadDSU(gtinSSI, (err, productConstDSU) => {
-                                                    if (err) {
-                                                        throw err;
-                                                    }
-                                                    productConstDSU.readFile("/manifest", (err, manifest) => {
+                                        //we need to invalidate DSUCache because if Const dsu fails the resolver tries to create a const dsu and adds it to the DSUCache
+                                        resolver.invalidateDSUCache(gtinSSI, () => {
+                                            mappingEngine.digestMessages(updateMessage).then((undigested) => {
+                                                assert.true(undigested.length === 0, "Mapping engine not able to properly digest our message with the force flag!");
+                                                openDSU.loadApi("resolver").invalidateDSUCache(gtinSSI, () => {
+
+                                                    resolver.loadDSU(gtinSSI, (err, productConstDSU) => {
                                                         if (err) {
                                                             throw err;
                                                         }
+                                                        productConstDSU.readFile("/manifest", (err, manifest) => {
+                                                            if (err) {
+                                                                throw err;
+                                                            }
 
-                                                        assert.true(typeof manifest !== "undefined");
-                                                        testFinishCallback();
+                                                            assert.true(typeof manifest !== "undefined");
+                                                            testFinishCallback();
+                                                        });
                                                     });
                                                 });
+                                            }).catch(err => {
+                                                throw err;
                                             });
-                                        }).catch(err => {
-                                            throw err;
                                         });
+                                    }).catch(err => {
+                                        throw err;
                                     });
-                                }).catch(err => {
-                                    throw err;
                                 });
                             });
                         });
@@ -226,7 +269,7 @@ function buildTestFunction(gtinSSI, initialMessage, updateMessage) {
 let initialBatchMessage = buildBatchMessage();
 let updateBatchMessage = buildBatchMessage();
 updateBatchMessage.batch.expiryDate = "231200";
-assert.callback("Recovery Mode for Product based messages", buildTestFunction(batchGtinSSI, initialBatchMessage, updateBatchMessage), 1000000);
+assert.callback("Recovery Mode for Batch based messages", buildTestFunction(batchGtinSSI, initialBatchMessage, updateBatchMessage), 1000000);
 
 
 
