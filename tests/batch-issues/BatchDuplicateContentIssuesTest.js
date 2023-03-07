@@ -1,6 +1,6 @@
 require("../../../opendsu-sdk/psknode/bundles/testsRuntime");
 require("../../build/bundles/gtinResolver");
-console.log("gtinResolver", require("gtin-resolver/index"));
+console.log("gtinResolver", require("gtin-resolver"));
 const tir = require("../../../opendsu-sdk/psknode/tests/util/tir");
 
 const dc = require("double-check");
@@ -65,7 +65,7 @@ assert.callback(
                 option: {},
             },
         };
-        await tir.launchConfigurableApiHubTestNodeAsync({ domains: [{ name: "vault", config: vaultDomainConfig }]});
+        await tir.launchConfigurableApiHubTestNodeAsync({domains: [{name: "vault", config: vaultDomainConfig}]});
 
         const mainEnclave = enclaveAPI.initialiseWalletDBEnclave();
         let sharedEnclave;
@@ -86,24 +86,54 @@ assert.callback(
         console.log("FINISHED LOADING ENCLAVES");
 
         const storageService = await $$.promisify(getSharedStorage)();
-
+        const keySSI = await storageService.getKeySSIAsync();
+        const resolver = require("opendsu").loadAPI("resolver");
+        await $$.promisify(resolver.invalidateDSUCache)(keySSI);
         await MessagesService.processMessages(PRODUCT_MESSAGES, storageService, async (undigestedMessages) => {
             console.log("undigestedMessages PRODUCT_MESSAGES", undigestedMessages);
 
             await MessagesService.processMessages(BATCH_MESSAGES, storageService, async (undigestedMessages) => {
                 console.log("undigestedMessages BATCH_MESSAGES", undigestedMessages);
 
-                await $$.promisify(storageService.refresh, storageService)();
-                let results = await $$.promisify(storageService.filter, storageService)(
-                    constants.BATCHES_STORAGE_TABLE,
-                    `__timestamp > 0`,
-                    "dsc"
-                );
-                console.log("results", results);
-                testFinished();
+                let newMessages = BATCH_MESSAGES.map(msg => {
+                    msg.expiryDate = Date.now()
+                    return msg;
+                });
+
+                await MessagesService.processMessages(newMessages, storageService, async (undigestedMessages) => {
+                    console.log("undigestedMessages BATCH_MESSAGES", undigestedMessages);
+
+                    newMessages = PRODUCT_MESSAGES.map(msg => {
+                        msg.nameMedicinalProduct = require("crypto").randomBytes(20).toString("hex")
+                        return msg;
+                    });
+
+                    await MessagesService.processMessages(newMessages, storageService, async (undigestedMessages) => {
+                        console.log("undigestedMessages PRODUCT_MESSAGES", undigestedMessages);
+                        let results = await $$.promisify(storageService.filter, storageService)(
+                            constants.BATCHES_STORAGE_TABLE,
+                            `__timestamp > 0`,
+                            "dsc"
+                        );
+                        newMessages = BATCH_MESSAGES.map(msg => {
+                            msg.expiryDate = Date.now()
+                            return msg;
+                        });
+                        await MessagesService.processMessages(newMessages, storageService, async (undigestedMessages) => {
+                            console.log("undigestedMessages BATCH_MESSAGES", undigestedMessages);
+                            // await $$.promisify(storageService.refresh, storageService)();
+                            let results = await $$.promisify(storageService.filter, storageService)(
+                                constants.BATCHES_STORAGE_TABLE,
+                                `__timestamp > 0`,
+                                "dsc"
+                            );
+                            console.log("results", results);
+                            testFinished();
+                        });
+                    });
+                });
             });
         });
-
     },
     10000000
 );
