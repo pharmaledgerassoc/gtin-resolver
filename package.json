@@ -1,6 +1,6 @@
 {
     "name": "gtin-resolver",
-    "version": "v1.3.0",
+    "version": "v1.4.0",
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -8,14 +8,14 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/PharmaLedger-IMI/gtin-resolver.git"
+        "url": "git+https://github.com/pharmaledgerassoc/gtin-resolver.git"
     },
     "author": "",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/PharmaLedger-IMI/gtin-resolver/issues"
+        "url": "https://github.com/pharmaledgerassoc/gtin-resolver/issues"
     },
-    "homepage": "https://github.com/PharmaLedger-IMI/gtin-resolver#readme",
+    "homepage": "https://github.com/pharmaledgerassoc/gtin-resolver#readme",
     "dependencies": {
         "octopus": "git+http://github.com/opendsu/octopus.git"
     }
