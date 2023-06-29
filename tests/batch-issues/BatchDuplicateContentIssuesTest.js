@@ -1,4 +1,4 @@
-require("../../../opendsu-sdk/psknode/bundles/testsRuntime");
+require("../../../opendsu-sdk/builds/output/testsRuntime");
 require("../../build/bundles/gtinResolver");
 console.log("gtinResolver", require("gtin-resolver"));
 const tir = require("../../../opendsu-sdk/psknode/tests/util/tir");
