@@ -65,7 +65,7 @@ assert.callback(
                 option: {},
             },
         };
-        await tir.launchConfigurableApiHubTestNodeAsync({domains: [{name: "vault", config: vaultDomainConfig}]});
+        await tir.launchConfigurableApiHubTestNodeAsync({domains: [{name: "vault", config: vaultDomainConfig}], rootFolder: folder});
 
         const mainEnclave = enclaveAPI.initialiseWalletDBEnclave();
         let sharedEnclave;
