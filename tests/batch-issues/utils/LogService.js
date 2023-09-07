@@ -51,7 +51,7 @@ class LogService {
             }
 
             const crypto = require("opendsu").loadAPI("crypto");
-            storageService.safeBeginBatch((err) => {
+            storageService.startOrAttachBatch((err, batchId) => {
                 if (err) {
                     return callback(err);
                 }
@@ -59,7 +59,7 @@ class LogService {
                     if (err) {
                         return callback(err);
                     }
-                    storageService.commitBatch(callback);
+                    storageService.commitBatch(batchId, callback);
                 });
             });
         });
