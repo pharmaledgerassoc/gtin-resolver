@@ -1,4 +1,4 @@
-require('../../opendsu-sdk/psknode/bundles/testsRuntime');
+require('../../opendsu-sdk/builds/output/testsRuntime');
 require('../../gtin-resolver/build/bundles/gtinResolver');
 const testIntegration = require("../../opendsu-sdk/psknode/tests/util/tir");
 const domain = "default";
