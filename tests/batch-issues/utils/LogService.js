@@ -51,11 +51,16 @@ class LogService {
             }
 
             const crypto = require("opendsu").loadAPI("crypto");
-            storageService.insertRecord(this.logsTable, crypto.generateRandom(32).toString("hex"), log, (err) => {
+            storageService.startOrAttachBatch((err, batchId) => {
                 if (err) {
                     return callback(err);
                 }
-                callback(undefined, log);
+                storageService.insertRecord(this.logsTable, crypto.encodeBase58(crypto.generateRandom(32)), log, (err) => {
+                    if (err) {
+                        return callback(err);
+                    }
+                    storageService.commitBatch(batchId, callback);
+                });
             });
         });
     }

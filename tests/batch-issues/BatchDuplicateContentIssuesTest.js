@@ -1,4 +1,4 @@
-require("../../../opendsu-sdk/psknode/bundles/testsRuntime");
+require("../../../opendsu-sdk/builds/output/testsRuntime");
 require("../../build/bundles/gtinResolver");
 console.log("gtinResolver", require("gtin-resolver"));
 const tir = require("../../../opendsu-sdk/psknode/tests/util/tir");
@@ -65,7 +65,7 @@ assert.callback(
                 option: {},
             },
         };
-        await tir.launchConfigurableApiHubTestNodeAsync({domains: [{name: "vault", config: vaultDomainConfig}]});
+        await tir.launchConfigurableApiHubTestNodeAsync({domains: [{name: "vault", config: vaultDomainConfig}], rootFolder: folder});
 
         const mainEnclave = enclaveAPI.initialiseWalletDBEnclave();
         let sharedEnclave;
