@@ -1,0 +1,933 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "ePI SOR Integration",
+    "description": "This is the documentation of SOR Integration APIs Proposal",
+    "contact": {
+      "email": "sinica.alboaie@axiologic.net"
+    },
+    "version": "1.0.0"
+  },
+  "externalDocs": {
+    "description": "SOR Integration Confluence documentation",
+    "url": "https://pharmaledger.atlassian.net/wiki/spaces/ELECTRONIC/pages/220463142/SoR+Integration+APIs+Proposal"
+  },
+  "servers": [
+    {
+      "url": "https://red1.pladevs.com/"
+    },
+    {
+      "url": "https://red2.pladevs.com/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Products",
+      "description": "Create and edit pharmaceutical products",
+      "externalDocs": {
+        "description": "Product JSON specifications",
+        "url": "https://pharmaledger.atlassian.net/wiki/spaces/ELECTRONIC/pages/44793883/JSON+product+and+batch+specification"
+      }
+    },
+    {
+      "name": "Batches",
+      "description": "Create and edit products batches",
+      "externalDocs": {
+        "description": "Batch JSON specifications",
+        "url": "https://pharmaledger.atlassian.net/wiki/spaces/ELECTRONIC/pages/44793883/JSON+product+and+batch+specification"
+      }
+    },
+    {
+      "name": "Leaflets",
+      "description": "Electronic Product Information"
+    },
+    {
+      "name": "Messages",
+      "description": "Integration messages to create or edit data"
+    }
+  ],
+  "paths": {
+    "/integration/message": {
+      "put": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Create or update DSUs",
+        "description": "Takes a JSON message and makes the updates to the DSUs and enterprise metadata database",
+        "operationId": "digestMessage",
+        "requestBody": {
+          "description": "Create or update DSU",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Pet not found"
+          },
+          "405": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    },
+    "/integration/multipleMessages": {
+      "put": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Create or update DSUs",
+        "description": "Takes a JSON message and makes the updates to the DSUs and enterprise metadata database",
+        "operationId": "digestMultipleMessages",
+        "requestBody": {
+          "description": "Create or update DSU",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Pet not found"
+          },
+          "405": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    },
+    "/integration/groupedMessages": {
+      "put": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Create or update DSUs",
+        "description": "Takes a JSON message and makes the updates to the DSUs and enterprise metadata database",
+        "operationId": "digestGroupedMessages",
+        "requestBody": {
+          "description": "Create or update DSU",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Pet not found"
+          },
+          "405": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    },
+    "/integration/addProduct/$GTIN": {
+      "post": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Create a new product",
+        "description": "Takes a unique GTIN and creates a product with that GTIN.",
+        "operationId": "addProduct",
+        "parameters": [
+          {
+            "name": "GTIN",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Creates a new product.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/integration/updateProduct/$GTIN": {
+      "put": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Update a product",
+        "description": "Update information about an already existing product.",
+        "operationId": "updateProduct",
+        "parameters": [
+          {
+            "name": "GTIN",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Updates an already existing product.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/integration/addBatch/$GTIN/$batchno": {
+      "post": {
+        "tags": ["Messages"],
+        "summary": "Create a new batch",
+        "description": "Creates a new batch with a unique Batch ID for a certain product.",
+        "operationId": "addBatch",
+        "parameters": [
+          {
+            "name": "GTIN",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true
+          },
+          {
+            "name": "batchno",
+            "in": "path",
+            "description": "Unique identifier of the batch",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Creates a new batch.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Batch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/integration/updateBatch/$batchno": {
+      "put": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Update an existing batch",
+        "description": "Updates information about an already existing batch",
+        "operationId": "updateBatch",
+        "parameters": [
+          {
+            "name": "batchno",
+            "in": "path",
+            "description": "Unique identifier of the batch",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Updates an existing.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Batch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/integration/product/addEPI/$GTIN": {
+      "post": {
+        "tags": ["Messages"],
+        "summary": "Add a new leaflet",
+        "description": "Adds a new leaflet to an existing product.",
+        "operationId": "addEPItoProduct",
+        "parameters": [
+          {
+            "name": "GTIN",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Add a new leaflet",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Leaflet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/integration/product/updateEPI/$GTIN": {
+      "put": {
+        "tags": ["Messages"],
+        "summary": "Update a leaflet",
+        "description": "Updates the leaflet of an existing product.",
+        "operationId": "updateEPIforProduct",
+        "parameters": [
+          {
+            "name": "GTIN",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Update a leaflet",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Leaflet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/integration/product/deleteEPI/$GTIN": {
+      "delete": {
+        "tags": ["Messages"],
+        "summary": "Delete a leaflet",
+        "description": "Delete a leaflet of an existing product.",
+        "operationId": "deleteEPIofProduct",
+        "parameters": [
+          {
+            "name": "GTIN",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Delete a leaflet",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Leaflet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+      },
+    "/integration/batch/addEPI/$batchno": {
+      "post": {
+        "tags": ["Messages"],
+        "summary": "Add a new leaflet",
+        "description": "Adds a new leaflet to an existing batch.",
+        "operationId": "addEPItoBatch",
+        "parameters": [
+          {
+            "name": "batchno",
+            "in": "path",
+            "description": "Unique identifier of the batch",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Add a new leaflet",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Leaflet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/integration/batch/updateEPI/$batchno": {
+      "put": {
+        "tags": ["Messages"],
+        "summary": "Update a leaflet",
+        "description": "Updates the leaflet of an existing batch.",
+        "operationId": "updateEPIforBatch",
+        "parameters": [
+          {
+            "name": "batchno",
+            "in": "path",
+            "description": "Unique identifier of the batch",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Update a leaflet",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Leaflet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/integration/batch/deleteEPI/$batchno": {
+      "delete": {
+        "tags": ["Messages"],
+        "summary": "Delete a leaflet",
+        "description": "Delete a leaflet of an existing batch.",
+        "operationId": "deleteEPIofBatch",
+        "parameters": [
+          {
+            "name": "batchno",
+            "in": "path",
+            "description": "Unique identifier of the batch",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Delete a leaflet",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Leaflet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/integration/product/addImage/$GTIN": {
+      "post": {
+        "tags": ["Messages"],
+        "summary": "Add a product image",
+        "description": "Add an image to a product.",
+        "operationId": "addProductImage",
+        "parameters": [
+          {
+            "name": "GTIN",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Add a product image",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductImage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/integration/product/updateImage/$GTIN": {
+      "put": {
+        "tags": ["Messages"],
+        "summary": "Update a product image",
+        "description": "Update the image of a product.",
+        "operationId": "updateProductImage",
+        "parameters": [
+          {
+            "name": "GTIN",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Update a product image",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductImage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+
+    "/audit/addLog": {
+      "post": {
+        "tags": ["Messages"],
+        "summary": "Add a log entry to the Audit log",
+        "operationId": "addAuditLog",
+        "requestBody": {
+          "description": "Add a log entry to the Audit log",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuditLog"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          }
+        }
+      }
+    },
+    "/audit/filterLogs/$start/$number/query": {
+
+    },
+
+    "/epi/listProducts/$start/$number/query": {
+      "get": {
+        "summary": "List products",
+        "description": "Return a list of products and metadata required to display in the UI",
+        "operationId": "listProducts",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "path",
+            "description": "Index of the product which is going to be listed first",
+            "required": false
+          },
+          {
+            "name": "number",
+            "in": "path",
+            "description": "The number of products to be listed",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/epi/listBatches/$start/$number/query": {
+      "get": {
+        "summary": "List batches",
+        "description": "Return a list of batches and metadata required to display in the UI",
+        "operationId": "listBatches",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "path",
+            "description": "Index of the batch which is going to be listed first",
+            "required": false
+          },
+          {
+            "name": "number",
+            "in": "path",
+            "description": "The number of batches to be listed",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/epi/readProductsMetadata": {
+      "get": {
+        "summary": "Display metadata for products",
+        "description": "Returns the whole product metadata",
+        "operationId": "readProductsMetadata",
+        "requestBody": {
+          "description": "Display metadata for products.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/epi/readBatchMetadata": {
+      "get": {
+        "summary": "Display metadata for batch",
+        "description": "Returns the whole batch metadata",
+        "operationId": "readBatchMetadata",
+        "requestBody": {
+          "description": "Display metadata for batch.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Batch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/epi/listProductsLangs/$GTIN": {
+      "get": {
+        "summary": "List product languages",
+        "description": "Returns the list of languages supported by the product",
+        "operationId": "listProductsLangs",
+        "parameters": [
+          {
+            "name": "GTIN",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Display languages available for a product.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/epi/listBatchLangs/$GTIN/$batchno": {
+      "get": {
+        "summary": "List batch languages",
+        "description": "Returns the list of languages supported by the batch",
+        "operationId": "listBatchLangs",
+        "parameters": [
+          {
+            "name": "GTIN",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true
+          },
+          {
+            "name": "batchno",
+            "in": "path",
+            "description": "Unique identifier of the batch",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Display languages available for a batch.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Batch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/epi/getProductLeaflet": {
+      "get": {
+        "summary": "Retrieve a leaflet from a product",
+        "description": "Retrieve the XML and images that compose the leaflet of a product",
+        "operationId": "getProductLeaflet",
+        "requestBody": {
+          "description": "Retrieve a leaflet from a product",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Leaflet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          }
+        }
+      }
+    },
+    "/epi/getBatchLeaflet": {
+      "get": {
+        "summary": "Retrieve a leaflet from a batch",
+        "description": "Retrieve the XML and images that compose the leaflet of a batch",
+        "operationId": "getBatchLeaflet",
+        "requestBody": {
+          "description": "Retrieve a leaflet from a batch",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Leaflet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "messageType": {
+            "type": "string",
+            "default": "Product"
+          },
+          "messageTypeVersion": {
+            "type": "integer",
+            "format": "int",
+            "example": 1
+          },
+          "senderId": {
+            "type": "string",
+            "example": "SOR User"
+          },
+          "receiverId": {
+            "type": "string",
+            "example": "QPNVS"
+          },
+          "messageId": {
+            "type": "string",
+            "example": "S000001"
+          },
+          "messageDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-11T09:10:01CET"
+          },
+          "product": {
+            "type": "object",
+            "properties": {
+              "productCode": {
+                "type": "string",
+                "maxLength": 14,
+                "minLength": 14,
+                "example": "02113111111164"
+              },
+              "internalMaterialCode": {
+                "type": "string",
+                "example": ""
+              },
+              "inventedName": {
+                "type": "string",
+                "example": ""
+              },
+              "nameMedicinalProduct": {
+                "type": "string",
+                "example": ""
+              },
+              "strength": {
+                "type": "string",
+                "example": ""
+              }
+            }
+          }
+        }
+      },
+      "Batch": {
+        "type": "object",
+        "properties": {
+          
+        }
+      },
+      "Leaflet": {
+      },
+      "ProductImage": {
+      },
+      "AuditLog": {}
+    },
+    "requestBodies": {
+    }
+  }
+}
