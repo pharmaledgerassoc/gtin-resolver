@@ -1,0 +1,394 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "ePI SOR Integration",
+    "description": "This is the documentation of SOR Integration APIs Proposal",
+    "contact": {
+      "email": "sinica.alboaie@axiologic.net"
+    },
+    "version": "1.0.0"
+  },
+  "externalDocs": {
+    "description": "SOR Integration Confluence documentation",
+    "url": "https://pharmaledger.atlassian.net/wiki/spaces/ELECTRONIC/pages/220463142/SoR+Integration+APIs+Proposal"
+  },
+  "servers": [
+    {
+      "url": "https://red1.pladevs.com/"
+    },
+    {
+      "url": "https://red2.pladevs.com/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Products",
+      "description": "Create and edit pharmaceutical products",
+      "externalDocs": {
+        "description": "Product JSON specifications",
+        "url": "https://pharmaledger.atlassian.net/wiki/spaces/ELECTRONIC/pages/44793883/JSON+product+and+batch+specification"
+      }
+    },
+    {
+      "name": "Batches",
+      "description": "Create and edit products batches",
+      "externalDocs": {
+        "description": "Batch JSON specifications",
+        "url": "https://pharmaledger.atlassian.net/wiki/spaces/ELECTRONIC/pages/44793883/JSON+product+and+batch+specification"
+      }
+    },
+    {
+      "name": "Leaflets",
+      "description": "Electronic Product Information"
+    },
+    {
+      "name": "Messages",
+      "description": "Integration messages to create or edit data"
+    }
+  ],
+  "paths": {
+    "/audit/{domain}/addLog": {
+      "post": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Add a log entry to the Audit log",
+        "operationId": "addAuditLog",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Add a log entry to the Audit log",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuditLog"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          }
+        }
+      }
+    },
+    "/audit/{domain}/filterLogs/{start}/{number}/query": {
+      "get": {
+        "tags": [
+          "Audit Logs"
+        ],
+        "summary": "Filter audit logs",
+        "description": "Filter audit logs based on the provided parameters.",
+        "operationId": "filterAuditLogs",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "path",
+            "description": "The start index of the audit logs to retrieve",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "number",
+            "in": "path",
+            "description": "The number of audit logs to retrieve",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "messageType": {
+            "type": "string",
+            "default": "Product"
+          },
+          "messageTypeVersion": {
+            "type": "integer",
+            "format": "int",
+            "example": 1
+          },
+          "senderId": {
+            "type": "string",
+            "example": "SOR User"
+          },
+          "receiverId": {
+            "type": "string",
+            "example": "QPNVS"
+          },
+          "messageId": {
+            "type": "string",
+            "example": "S000001"
+          },
+          "messageDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-11T09:10:01CET"
+          },
+          "product": {
+            "type": "object",
+            "properties": {
+              "productCode": {
+                "type": "string",
+                "maxLength": 14,
+                "minLength": 14,
+                "required": true,
+                "example": "02113111111164"
+              },
+              "internalMaterialCode": {
+                "type": "string",
+                "example": ""
+              },
+              "inventedName": {
+                "type": "string",
+                "required": true,
+                "example": ""
+              },
+              "nameMedicinalProduct": {
+                "type": "string",
+                "required": true,
+                "example": ""
+              },
+              "strength": {
+                "type": "string",
+                "example": ""
+              }
+            }
+          }
+        }
+      },
+      "Batch": {
+        "type": "object",
+        "required": true,
+        "properties": {
+          "productCode": {
+            "type": "string",
+            "required": true
+          },
+          "batch": {
+            "type": "string",
+            "required": true
+          },
+          "expiryDate": {
+            "type": "batchDate",
+            "required": true
+          },
+          "packagingSiteName": {
+            "type": "string"
+          },
+          "epiLeafletVersion": {
+            "type": "number"
+          },
+          "flagEnableEXPVerification": {
+            "type": "boolean"
+          },
+          "flagEnableExpiredEXPCheck": {
+            "type": "boolean"
+          },
+          "batchMessage": {
+            "type": "string"
+          },
+          "flagEnableBatchRecallMessage": {
+            "type": "boolean"
+          },
+          "recallMessage": {
+            "type": "string"
+          },
+          "flagEnableACFBatchCheck": {
+            "type": "boolean"
+          },
+          "acfBatchCheckURL": {
+            "type": "string"
+          },
+          "flagEnableSNVerification": {
+            "type": "boolean"
+          },
+          "acdcAuthFeatureSSI": {
+            "type": "string"
+          },
+          "snValidReset": {
+            "type": "boolean"
+          },
+          "snValid": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "messageType": {
+            "type": "string"
+          },
+          "messageTypeVersion": {
+            "type": "number"
+          },
+          "senderId": {
+            "type": "string"
+          },
+          "receiverId": {
+            "type": "string"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "messageDateTime": {
+            "type": "string"
+          }
+        }
+      },
+      "Leaflet": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "required": true
+          },
+          "language": {
+            "type": "string",
+            "required": true
+          },
+          "productCode": {
+            "type": "string",
+            "required": true
+          },
+          "xmlFileContent": {
+            "type": "string",
+            "required": true
+          },
+          "otherFilesContent": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "filename": {
+                  "type": "string",
+                  "required": true
+                },
+                "fileContent": {
+                  "type": "string",
+                  "required": true
+                }
+              }
+            }
+          },
+          "messageType": {
+            "type": "string"
+          },
+          "messageTypeVersion": {
+            "type": "number"
+          },
+          "senderId": {
+            "type": "string"
+          },
+          "receiverId": {
+            "type": "string"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "messageDateTime": {
+            "type": "string"
+          }
+        }
+      },
+      "ProductImage": {
+        "type": "object",
+        "properties": {
+          "productCode": {
+            "type": "string",
+            "required": true
+          },
+          "imageData": {
+            "type": "string",
+            "required": true
+          },
+          "messageType": {
+            "type": "string"
+          },
+          "messageTypeVersion": {
+            "type": "number"
+          },
+          "senderId": {
+            "type": "string"
+          },
+          "receiverId": {
+            "type": "string"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "messageDateTime": {
+            "type": "string"
+          }
+        }
+      },
+      "AuditLog": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "itemCode": {
+            "type": "string"
+          },
+          "diffs": {
+            "type": "object"
+          },
+          "anchorId": {
+            "type": "string"
+          },
+          "hashLink": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "logInfo": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "requestBodies": {}
+  }
+}
