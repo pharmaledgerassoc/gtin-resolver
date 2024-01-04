@@ -154,6 +154,69 @@
         }
       }
     },
+    "/integration/{domain}/updateBatchFromMessages": {
+      "put": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Update a batch's info and/or leaflet",
+        "description": "Takes a JSON message and makes the updates the batch's info and/or leaflet.",
+        "operationId": "digestBatchMessages",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Updates a batch's info and/or leaflet.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Batch"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Leaflet"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Pet not found"
+          },
+          "405": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    },
     "/integration/{domain}/batch/addEPI/{batchNumber}": {
       "post": {
         "tags": [
@@ -370,7 +433,8 @@
             "required": true
           },
           "expiryDate": {
-            "type": "batchDate",
+            "type": "string",
+            "format": "date-time",
             "required": true
           },
           "packagingSiteName": {
@@ -431,7 +495,8 @@
             "type": "string"
           },
           "messageDateTime": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -486,7 +551,8 @@
             "type": "string"
           },
           "messageDateTime": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -517,7 +583,8 @@
             "type": "string"
           },
           "messageDateTime": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
