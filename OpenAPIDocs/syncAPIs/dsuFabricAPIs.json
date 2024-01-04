@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "ePI SOR Integration",
-    "description": "This is the documentation of SOR Integration APIs Proposal",
+    "title": "DSU Fabric API for SOR Integration",
+    "description": "This is the documentation of SOR Integration APIs used in DSU Fabric",
     "contact": {
       "email": "sinica.alboaie@axiologic.net"
     },
@@ -139,7 +139,7 @@
         }
       }
     },
-    "/epi/{domain}/listProducts/{start}/{number}/query": {
+    "/epi/{domain}/listProducts/{start}/{number}/{sort}/{query}": {
       "get": {
         "summary": "List products",
         "description": "Return a list of products and metadata required to display in the UI",
@@ -174,6 +174,30 @@
               "type": "integer",
               "format": "int64",
               "example": 10
+            }
+          },
+          {
+            "name": "sort",
+            "in": "path",
+            "description": "The sorting criteria",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "asc",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "query",
+            "in": "path",
+            "description": "The search criteria",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "GTIN == 00000000000000"
             }
           }
         ],

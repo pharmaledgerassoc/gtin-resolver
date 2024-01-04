@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "ePI SOR Integration",
-    "description": "This is the documentation of SOR Integration APIs Proposal",
+    "title": "ePI message based SOR Integration API",
+    "description": "This is the documentation of message based SOR Integration APIs Proposal",
     "contact": {
       "email": "sinica.alboaie@axiologic.net"
     },
@@ -71,7 +71,20 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Product"
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Product"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Leaflet"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ProductImage"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Batch"
+                  }
+                ]
               }
             }
           },
@@ -120,11 +133,27 @@
           }
         ],
         "requestBody": {
-          "description": "Create or update DSU",
+          "description": "Updates a product's info, leaflet and/or image.",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Product"
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Product"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Leaflet"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ProductImage"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Batch"
+                    }
+                  ]
+                }
               }
             }
           },
@@ -173,11 +202,27 @@
           }
         ],
         "requestBody": {
-          "description": "Create or update DSU",
+          "description": "Updates a product's info, leaflet and/or image.",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Product"
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Product"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Leaflet"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ProductImage"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Batch"
+                    }
+                  ]
+                }
               }
             }
           },

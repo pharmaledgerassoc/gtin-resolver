@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "ePI SOR Integration",
-    "description": "This is the documentation of SOR Integration APIs Proposal",
+    "title": "Audit Logs API",
+    "description": "This is the documentation of SOR Integration APIs for Audit Logs",
     "contact": {
       "email": "sinica.alboaie@axiologic.net"
     },
@@ -82,7 +82,7 @@
         }
       }
     },
-    "/audit/{domain}/filterLogs/{start}/{number}/query": {
+    "/audit/{domain}/filterLogs/{start}/{number}/{sort}/{query}": {
       "get": {
         "tags": [
           "Audit Logs"
@@ -117,6 +117,26 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "sort",
+            "in": "path",
+            "description": "The sort order of the audit logs to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "enum": ["asc", "desc"]
+          },
+          {
+            "name": "query",
+            "in": "path",
+            "description": "The query to filter the audit logs",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "username == admin"
           }
         ],
         "responses": {
@@ -208,7 +228,8 @@
             "required": true
           },
           "expiryDate": {
-            "type": "batchDate",
+            "type": "string",
+            "format": "date-time",
             "required": true
           },
           "packagingSiteName": {
@@ -269,7 +290,8 @@
             "type": "string"
           },
           "messageDateTime": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -324,7 +346,8 @@
             "type": "string"
           },
           "messageDateTime": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -355,7 +378,8 @@
             "type": "string"
           },
           "messageDateTime": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },

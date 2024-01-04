@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "ePI SOR Integration",
-    "description": "This is the documentation of SOR Integration APIs Proposal",
+    "title": "Batch API",
+    "description": "This is the documentation of SOR Integration API for batch management.",
     "contact": {
       "email": "sinica.alboaie@axiologic.net"
     },

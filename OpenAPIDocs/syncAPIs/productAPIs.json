@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "ePI SOR Integration",
-    "description": "This is the documentation of SOR Integration APIs Proposal",
+    "title": "Product API",
+    "description": "This is the documentation of SOR Integration APIs for managing products",
     "contact": {
       "email": "sinica.alboaie@axiologic.net"
     },
@@ -144,6 +144,72 @@
           },
           "400": {
             "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/integration/{domain}/updateProductFromMessages": {
+      "put": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Update a product's info, leaflet and/or image",
+        "description": "Takes a JSON message and makes the updates the product's info, leaflet and/or image.",
+        "operationId": "digestProductMessages",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Updates a product's info, leaflet and/or image.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Product"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Leaflet"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ProductImage"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Pet not found"
+          },
+          "405": {
+            "description": "Validation exception"
           }
         }
       }
@@ -460,7 +526,8 @@
             "required": true
           },
           "expiryDate": {
-            "type": "batchDate",
+            "type": "string",
+            "format": "date-time",
             "required": true
           },
           "packagingSiteName": {
@@ -521,7 +588,8 @@
             "type": "string"
           },
           "messageDateTime": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -576,7 +644,8 @@
             "type": "string"
           },
           "messageDateTime": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -607,7 +676,8 @@
             "type": "string"
           },
           "messageDateTime": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
