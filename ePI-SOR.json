@@ -31,487 +31,30 @@
     },
     {
       "name": "Batches",
-      "description": "Create and edit products batches",
+      "description": "Create and edit batches",
       "externalDocs": {
         "description": "Batch JSON specifications",
         "url": "https://pharmaledger.atlassian.net/wiki/spaces/ELECTRONIC/pages/44793883/JSON+product+and+batch+specification"
       }
     },
     {
-      "name": "Leaflets",
+      "name": "DSU Fabric",
       "description": "Electronic Product Information"
     },
     {
       "name": "Messages",
       "description": "Integration messages to create or edit data"
+    },
+    {
+      "name": "Audit",
+      "description": "Write and read audit logs"
     }
   ],
   "paths": {
-    "/epi/{domain}/readProductsMetadata": {
-      "get": {
-        "summary": "Display metadata for products",
-        "description": "Returns the whole product metadata",
-        "operationId": "readProductsMetadata",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation"
-          }
-        }
-      }
-    },
-    "/epi/{domain}/readBatchMetadata": {
-      "get": {
-        "summary": "Display metadata for batch",
-        "description": "Returns the whole batch metadata",
-        "operationId": "readBatchMetadata",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation"
-          }
-        }
-      }
-    },
-    "/epi/{domain}/getProductLeaflet": {
-      "get": {
-        "summary": "Retrieve a leaflet from a product",
-        "description": "Retrieve the XML and images that compose the leaflet of a product",
-        "operationId": "getProductLeaflet",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Operation"
-          }
-        }
-      }
-    },
-    "/epi/{domain}/getBatchLeaflet": {
-      "get": {
-        "summary": "Retrieve a leaflet from a batch",
-        "description": "Retrieve the XML and images that compose the leaflet of a batch",
-        "operationId": "getBatchLeaflet",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Operation"
-          }
-        }
-      }
-    },
-    "/integration/{domain}/message": {
-      "put": {
-        "tags": [
-          "Messages"
-        ],
-        "summary": "Create or update DSUs",
-        "description": "Takes a JSON message and makes the updates to the DSUs and enterprise metadata database",
-        "operationId": "digestMessage",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Create or update DSU",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Product"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Product"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Pet not found"
-          },
-          "405": {
-            "description": "Validation exception"
-          }
-        }
-      }
-    },
-    "/integration/{domain}/multipleMessages": {
-      "put": {
-        "tags": [
-          "Messages"
-        ],
-        "summary": "Create or update DSUs",
-        "description": "Takes a JSON message and makes the updates to the DSUs and enterprise metadata database",
-        "operationId": "digestMultipleMessages",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Create or update DSU",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Product"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Product"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Pet not found"
-          },
-          "405": {
-            "description": "Validation exception"
-          }
-        }
-      }
-    },
-    "/integration/{domain}/groupedMessages": {
-      "put": {
-        "tags": [
-          "Messages"
-        ],
-        "summary": "Create or update DSUs",
-        "description": "Takes a JSON message and makes the updates to the DSUs and enterprise metadata database",
-        "operationId": "digestGroupedMessages",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Create or update DSU",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Product"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Product"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Pet not found"
-          },
-          "405": {
-            "description": "Validation exception"
-          }
-        }
-      }
-    },
-    "/audit/{domain}/addLog": {
-      "post": {
-        "tags": [
-          "Messages"
-        ],
-        "summary": "Add a log entry to the Audit log",
-        "operationId": "addAuditLog",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Add a log entry to the Audit log",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AuditLog"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Operation"
-          }
-        }
-      }
-    },
-    "/epi/{domain}/listProducts/{start}/{number}/query": {
-      "get": {
-        "summary": "List products",
-        "description": "Return a list of products and metadata required to display in the UI",
-        "operationId": "listProducts",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "start",
-            "in": "path",
-            "description": "Index of the product which is going to be listed first",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64",
-              "example": 10
-            }
-          },
-          {
-            "name": "number",
-            "in": "path",
-            "description": "The number of products to be listed",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64",
-              "example": 10
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Operation"
-          },
-          "400": {
-            "description": "Invalid Parameter"
-          }
-        }
-      }
-    },
-    "/epi/{domain}/listBatches/{start}/{number}/query": {
-      "get": {
-        "summary": "List batches",
-        "description": "Return a list of batches and metadata required to display in the UI",
-        "operationId": "listBatches",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "start",
-            "in": "path",
-            "description": "Index of the batch which is going to be listed first",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64",
-              "example": 10
-            }
-          },
-          {
-            "name": "number",
-            "in": "path",
-            "description": "The number of batches to be listed",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64",
-              "example": 10
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Operation"
-          },
-          "400": {
-            "description": "Invalid Parameter"
-          }
-        }
-      }
-    },
-    "/epi/{domain}/listProductsLangs/{GTIN}": {
-      "get": {
-        "summary": "List product languages",
-        "description": "Returns the list of languages supported by the product",
-        "operationId": "listProductsLangs",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "GTIN",
-            "in": "path",
-            "description": "Global Trade Item Number of Product",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Operation"
-          },
-          "400": {
-            "description": "Invalid Parameter"
-          }
-        }
-      }
-    },
-    "/epi/{domain}/listBatchLangs/{GTIN}/{batchNumber}": {
-      "get": {
-        "summary": "List batch languages",
-        "description": "Returns the list of languages supported by the batch",
-        "operationId": "listBatchLangs",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "GTIN",
-            "in": "path",
-            "description": "Global Trade Item Number of Product",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "batchNumber",
-            "in": "path",
-            "description": "Unique identifier of the batch",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Operation"
-          },
-          "400": {
-            "description": "Invalid Parameter"
-          }
-        }
-      }
-    },
     "/integration/{domain}/addProduct/{GTIN}": {
       "post": {
         "tags": [
-          "Messages"
+          "Products"
         ],
         "summary": "Create a new product",
         "description": "Takes a unique GTIN and creates a product with that GTIN.",
@@ -563,7 +106,7 @@
     "/integration/{domain}/updateProduct/{GTIN}": {
       "put": {
         "tags": [
-          "Messages"
+          "Products"
         ],
         "summary": "Update a product",
         "description": "Update information about an already existing product.",
@@ -609,10 +152,306 @@
         }
       }
     },
+    "/integration/{domain}/updateProductFromMessages": {
+      "put": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Update a product's info, leaflet and/or image",
+        "description": "Takes a JSON message and makes the updates the product's info, leaflet and/or image.",
+        "operationId": "digestProductMessages",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Updates a product's info, leaflet and/or image.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Product"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Leaflet"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ProductImage"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Pet not found"
+          },
+          "405": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    },
+    "/integration/{domain}/product/addEPI/{GTIN}": {
+      "post": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Add a new leaflet",
+        "description": "Adds a new leaflet to an existing product.",
+        "operationId": "addEPItoProduct",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "GTIN",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Add a new leaflet",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Leaflet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/integration/{domain}/product/updateEPI/{GTIN}": {
+      "put": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Update a leaflet",
+        "description": "Updates the leaflet of an existing product.",
+        "operationId": "updateEPIforProduct",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "GTIN",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Update a leaflet",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Leaflet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/integration/{domain}/product/deleteEPI/{GTIN}": {
+      "delete": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Delete a leaflet",
+        "description": "Delete a leaflet of an existing product.",
+        "operationId": "deleteEPIofProduct",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "GTIN",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/integration/{domain}/product/addImage/{GTIN}": {
+      "post": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Add a product image",
+        "description": "Add an image to a product.",
+        "operationId": "addProductImage",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "GTIN",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Add a product image",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductImage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/integration/{domain}/product/updateImage/{GTIN}": {
+      "put": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Update a product image",
+        "description": "Update the image of a product.",
+        "operationId": "updateProductImage",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "GTIN",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Update a product image",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductImage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
     "/integration/{domain}/addBatch/{GTIN}/{batchNumber}": {
       "post": {
         "tags": [
-          "Messages"
+          "Batches"
         ],
         "summary": "Create a new batch",
         "description": "Creates a new batch with a unique Batch ID for a certain product.",
@@ -670,7 +509,7 @@
     "/integration/{domain}/updateBatch/{batchNumber}": {
       "put": {
         "tags": [
-          "Messages"
+          "Batches"
         ],
         "summary": "Update an existing batch",
         "description": "Updates information about an already existing batch",
@@ -716,76 +555,19 @@
         }
       }
     },
-    "/integration/{domain}/product/addEPI/{GTIN}": {
-      "post": {
-        "tags": [
-          "Messages"
-        ],
-        "summary": "Add a new leaflet",
-        "description": "Adds a new leaflet to an existing product.",
-        "operationId": "addEPItoProduct",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "GTIN",
-            "in": "path",
-            "description": "Global Trade Item Number of Product",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Add a new leaflet",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Leaflet"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Operation"
-          },
-          "400": {
-            "description": "Invalid Parameter"
-          }
-        }
-      }
-    },
-    "/integration/{domain}/product/updateEPI/{GTIN}": {
+    "/integration/{domain}/updateBatchFromMessages": {
       "put": {
         "tags": [
-          "Messages"
+          "Batches"
         ],
-        "summary": "Update a leaflet",
-        "description": "Updates the leaflet of an existing product.",
-        "operationId": "updateEPIforProduct",
+        "summary": "Update a batch's info and/or leaflet",
+        "description": "Takes a JSON message and makes the updates the batch's info and/or leaflet.",
+        "operationId": "digestBatchMessages",
         "parameters": [
           {
             "name": "domain",
             "in": "path",
             "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "GTIN",
-            "in": "path",
-            "description": "Global Trade Item Number of Product",
             "required": true,
             "schema": {
               "type": "string"
@@ -793,59 +575,45 @@
           }
         ],
         "requestBody": {
-          "description": "Update a leaflet",
+          "description": "Updates a batch's info and/or leaflet.",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Leaflet"
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Batch"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Leaflet"
+                    }
+                  ]
+                }
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
-            "description": "Successful Operation"
-          },
-          "400": {
-            "description": "Invalid Parameter"
-          }
-        }
-      }
-    },
-    "/integration/{domain}/product/deleteEPI/{GTIN}": {
-      "delete": {
-        "tags": [
-          "Messages"
-        ],
-        "summary": "Delete a leaflet",
-        "description": "Delete a leaflet of an existing product.",
-        "operationId": "deleteEPIofProduct",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
             }
           },
-          {
-            "name": "GTIN",
-            "in": "path",
-            "description": "Global Trade Item Number of Product",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Operation"
-          },
           "400": {
-            "description": "Invalid Parameter"
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Pet not found"
+          },
+          "405": {
+            "description": "Validation exception"
           }
         }
       }
@@ -853,7 +621,7 @@
     "/integration/{domain}/batch/addEPI/{batchNumber}": {
       "post": {
         "tags": [
-          "Messages"
+          "Batches"
         ],
         "summary": "Add a new leaflet",
         "description": "Adds a new leaflet to an existing batch.",
@@ -901,7 +669,7 @@
     "/integration/{domain}/batch/updateEPI/{batchNumber}": {
       "put": {
         "tags": [
-          "Messages"
+          "Batches"
         ],
         "summary": "Update a leaflet",
         "description": "Updates the leaflet of an existing batch.",
@@ -949,7 +717,7 @@
     "/integration/{domain}/batch/deleteEPI/{batchNumber}": {
       "delete": {
         "tags": [
-          "Messages"
+          "Batches"
         ],
         "summary": "Delete a leaflet",
         "description": "Delete a leaflet of an existing batch.",
@@ -984,14 +752,244 @@
         }
       }
     },
-    "/integration/{domain}/product/addImage/{GTIN}": {
-      "post": {
+    "/integration/{domain}/readProductsMetadata": {
+      "get": {
         "tags": [
-          "Messages"
+          "DSU Fabric"
         ],
-        "summary": "Add a product image",
-        "description": "Add an image to a product.",
-        "operationId": "addProductImage",
+        "summary": "Display metadata for products",
+        "description": "Returns the whole product metadata",
+        "operationId": "readProductsMetadata",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/integration/{domain}/readBatchMetadata": {
+      "get": {
+        "tags": [
+          "DSU Fabric"
+        ],
+        "summary": "Display metadata for batch",
+        "description": "Returns the whole batch metadata",
+        "operationId": "readBatchMetadata",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/integration/{domain}/getProductLeaflet": {
+      "get": {
+        "tags": [
+          "DSU Fabric"
+        ],
+        "summary": "Retrieve a leaflet from a product",
+        "description": "Retrieve the XML and images that compose the leaflet of a product",
+        "operationId": "getProductLeaflet",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          }
+        }
+      }
+    },
+    "/integration/{domain}/getBatchLeaflet": {
+      "get": {
+        "tags": [
+          "DSU Fabric"
+        ],
+        "summary": "Retrieve a leaflet from a batch",
+        "description": "Retrieve the XML and images that compose the leaflet of a batch",
+        "operationId": "getBatchLeaflet",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          }
+        }
+      }
+    },
+    "/integration/{domain}/listProducts/{start}/{number}/{sort}/{query}": {
+      "get": {
+        "tags": [
+          "DSU Fabric"
+        ],
+        "summary": "List products",
+        "description": "Return a list of products and metadata required to display in the UI",
+        "operationId": "listProducts",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "path",
+            "description": "Index of the product which is going to be listed first",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 10
+            }
+          },
+          {
+            "name": "number",
+            "in": "path",
+            "description": "The number of products to be listed",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 10
+            }
+          },
+          {
+            "name": "sort",
+            "in": "path",
+            "description": "The sorting criteria",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "asc",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "query",
+            "in": "path",
+            "description": "The search criteria",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "GTIN == 00000000000000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/integration/{domain}/listBatches/{start}/{number}/query": {
+      "get": {
+        "tags": [
+          "DSU Fabric"
+        ],
+        "summary": "List batches",
+        "description": "Return a list of batches and metadata required to display in the UI",
+        "operationId": "listBatches",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "path",
+            "description": "Index of the batch which is going to be listed first",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 10
+            }
+          },
+          {
+            "name": "number",
+            "in": "path",
+            "description": "The number of batches to be listed",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/integration/{domain}/listProductsLangs/{GTIN}": {
+      "get": {
+        "tags": [
+          "DSU Fabric"
+        ],
+        "summary": "List product languages",
+        "description": "Returns the list of languages supported by the product",
+        "operationId": "listProductsLangs",
         "parameters": [
           {
             "name": "domain",
@@ -1012,16 +1010,6 @@
             }
           }
         ],
-        "requestBody": {
-          "description": "Add a product image",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProductImage"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Successful Operation"
@@ -1032,14 +1020,61 @@
         }
       }
     },
-    "/integration/{domain}/product/updateImage/{GTIN}": {
+    "/integration/{domain}/listBatchLangs/{GTIN}/{batchNumber}": {
+      "get": {
+        "tags": [
+          "DSU Fabric"
+        ],
+        "summary": "List batch languages",
+        "description": "Returns the list of languages supported by the batch",
+        "operationId": "listBatchLangs",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "GTIN",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "batchNumber",
+            "in": "path",
+            "description": "Unique identifier of the batch",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          }
+        }
+      }
+    },
+    "/integration/{domain}/message": {
       "put": {
         "tags": [
           "Messages"
         ],
-        "summary": "Update a product image",
-        "description": "Update the image of a product.",
-        "operationId": "updateProductImage",
+        "summary": "Create or update DSUs",
+        "description": "Takes a JSON message and makes the updates to the DSUs and enterprise metadata database",
+        "operationId": "digestMessage",
         "parameters": [
           {
             "name": "domain",
@@ -1049,11 +1084,68 @@
             "schema": {
               "type": "string"
             }
+          }
+        ],
+        "requestBody": {
+          "description": "Create or update DSU",
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Product"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Leaflet"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ProductImage"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Batch"
+                  }
+                ]
+              }
+            }
           },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Pet not found"
+          },
+          "405": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    },
+    "/integration/{domain}/multipleMessages": {
+      "put": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Create or update DSUs",
+        "description": "Takes a JSON message and makes the updates to the DSUs and enterprise metadata database",
+        "operationId": "digestMultipleMessages",
+        "parameters": [
           {
-            "name": "GTIN",
+            "name": "domain",
             "in": "path",
-            "description": "Global Trade Item Number of Product",
+            "description": "The blockchain domain",
             "required": true,
             "schema": {
               "type": "string"
@@ -1061,11 +1153,148 @@
           }
         ],
         "requestBody": {
-          "description": "Update a product image",
+          "description": "Updates a product's info, leaflet and/or image.",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProductImage"
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Product"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Leaflet"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ProductImage"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Batch"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Pet not found"
+          },
+          "405": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    },
+    "/integration/{domain}/groupedMessages": {
+      "put": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Create or update DSUs",
+        "description": "Takes a JSON message and makes the updates to the DSUs and enterprise metadata database",
+        "operationId": "digestGroupedMessages",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Updates a product's info, leaflet and/or image.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Product"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Leaflet"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ProductImage"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Batch"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Pet not found"
+          },
+          "405": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    },
+    "/audit/{domain}/addLog": {
+      "post": {
+        "tags": [
+          "Audit"
+        ],
+        "summary": "Add a log entry to the Audit log",
+        "operationId": "addAuditLog",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Add a log entry to the Audit log",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuditLog"
               }
             }
           }
@@ -1073,17 +1302,14 @@
         "responses": {
           "200": {
             "description": "Successful Operation"
-          },
-          "400": {
-            "description": "Invalid Parameter"
           }
         }
       }
     },
-    "/audit/{domain}/filterLogs/{start}/{number}/query": {
+    "/audit/{domain}/filterLogs/{start}/{number}/{sort}/{query}": {
       "get": {
         "tags": [
-          "Audit Logs"
+          "Audit"
         ],
         "summary": "Filter audit logs",
         "description": "Filter audit logs based on the provided parameters.",
@@ -1115,6 +1341,26 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "sort",
+            "in": "path",
+            "description": "The sort order of the audit logs to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "enum": ["asc", "desc"]
+          },
+          {
+            "name": "query",
+            "in": "path",
+            "description": "The query to filter the audit logs",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "username == admin"
           }
         ],
         "responses": {
@@ -1206,7 +1452,8 @@
             "required": true
           },
           "expiryDate": {
-            "type": "batchDate",
+            "type": "string",
+            "format": "date-time",
             "required": true
           },
           "packagingSiteName": {
@@ -1267,7 +1514,8 @@
             "type": "string"
           },
           "messageDateTime": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -1322,7 +1570,8 @@
             "type": "string"
           },
           "messageDateTime": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -1353,7 +1602,8 @@
             "type": "string"
           },
           "messageDateTime": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
