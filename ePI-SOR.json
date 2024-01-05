@@ -51,13 +51,13 @@
     }
   ],
   "paths": {
-    "/integration/{domain}/addProduct/{GTIN}": {
+    "/integration/{domain}/addProduct/{gtin}": {
       "post": {
         "tags": [
           "Products"
         ],
         "summary": "Create a new product",
-        "description": "Takes a unique GTIN and creates a product with that GTIN.",
+        "description": "Takes a unique gtin and creates a product with that gtin.",
         "operationId": "addProduct",
         "parameters": [
           {
@@ -70,7 +70,7 @@
             }
           },
           {
-            "name": "GTIN",
+            "name": "gtin",
             "in": "path",
             "description": "Global Trade Item Number of Product",
             "required": true,
@@ -103,7 +103,7 @@
         }
       }
     },
-    "/integration/{domain}/updateProduct/{GTIN}": {
+    "/integration/{domain}/updateProduct/{gtin}": {
       "put": {
         "tags": [
           "Products"
@@ -122,7 +122,7 @@
             }
           },
           {
-            "name": "GTIN",
+            "name": "gtin",
             "in": "path",
             "description": "Global Trade Item Number of Product",
             "required": true,
@@ -218,7 +218,7 @@
         }
       }
     },
-    "/integration/{domain}/product/addEPI/{GTIN}": {
+    "/integration/{domain}/product/addEPI/{gtin}": {
       "post": {
         "tags": [
           "Products"
@@ -237,7 +237,7 @@
             }
           },
           {
-            "name": "GTIN",
+            "name": "gtin",
             "in": "path",
             "description": "Global Trade Item Number of Product",
             "required": true,
@@ -266,7 +266,7 @@
         }
       }
     },
-    "/integration/{domain}/product/updateEPI/{GTIN}": {
+    "/integration/{domain}/product/updateEPI/{gtin}": {
       "put": {
         "tags": [
           "Products"
@@ -285,7 +285,7 @@
             }
           },
           {
-            "name": "GTIN",
+            "name": "gtin",
             "in": "path",
             "description": "Global Trade Item Number of Product",
             "required": true,
@@ -314,7 +314,7 @@
         }
       }
     },
-    "/integration/{domain}/product/deleteEPI/{GTIN}": {
+    "/integration/{domain}/product/deleteEPI/{gtin}": {
       "delete": {
         "tags": [
           "Products"
@@ -333,7 +333,7 @@
             }
           },
           {
-            "name": "GTIN",
+            "name": "gtin",
             "in": "path",
             "description": "Global Trade Item Number of Product",
             "required": true,
@@ -352,7 +352,7 @@
         }
       }
     },
-    "/integration/{domain}/product/addImage/{GTIN}": {
+    "/integration/{domain}/product/addImage/{gtin}": {
       "post": {
         "tags": [
           "Products"
@@ -371,7 +371,7 @@
             }
           },
           {
-            "name": "GTIN",
+            "name": "gtin",
             "in": "path",
             "description": "Global Trade Item Number of Product",
             "required": true,
@@ -400,7 +400,7 @@
         }
       }
     },
-    "/integration/{domain}/product/updateImage/{GTIN}": {
+    "/integration/{domain}/product/updateImage/{gtin}": {
       "put": {
         "tags": [
           "Products"
@@ -419,7 +419,7 @@
             }
           },
           {
-            "name": "GTIN",
+            "name": "gtin",
             "in": "path",
             "description": "Global Trade Item Number of Product",
             "required": true,
@@ -448,7 +448,7 @@
         }
       }
     },
-    "/integration/{domain}/addBatch/{GTIN}/{batchNumber}": {
+    "/integration/{domain}/addBatch/{gtin}/{batchNumber}": {
       "post": {
         "tags": [
           "Batches"
@@ -467,7 +467,7 @@
             }
           },
           {
-            "name": "GTIN",
+            "name": "gtin",
             "in": "path",
             "description": "Global Trade Item Number of Product",
             "required": true,
@@ -506,7 +506,7 @@
         }
       }
     },
-    "/integration/{domain}/updateBatch/{batchNumber}": {
+    "/integration/{domain}/updateBatch/{gtin}/{batchNumber}": {
       "put": {
         "tags": [
           "Batches"
@@ -618,7 +618,7 @@
         }
       }
     },
-    "/integration/{domain}/batch/addEPI/{batchNumber}": {
+    "/integration/{domain}/batch/addEPI/{gtin}/{batchNumber}": {
       "post": {
         "tags": [
           "Batches"
@@ -666,7 +666,7 @@
         }
       }
     },
-    "/integration/{domain}/batch/updateEPI/{batchNumber}": {
+    "/integration/{domain}/batch/updateEPI/{gtin}/{batchNumber}": {
       "put": {
         "tags": [
           "Batches"
@@ -714,7 +714,7 @@
         }
       }
     },
-    "/integration/{domain}/batch/deleteEPI/{batchNumber}": {
+    "/integration/{domain}/batch/deleteEPI/{gtin}/{batchNumber}": {
       "delete": {
         "tags": [
           "Batches"
@@ -917,7 +917,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "example": "GTIN == 00000000000000"
+              "example": "gtin == 00000000000000"
             }
           }
         ],
@@ -982,7 +982,7 @@
         }
       }
     },
-    "/integration/{domain}/listProductsLangs/{GTIN}": {
+    "/integration/{domain}/listProductsLangs/{gtin}": {
       "get": {
         "tags": [
           "DSU Fabric"
@@ -1001,7 +1001,7 @@
             }
           },
           {
-            "name": "GTIN",
+            "name": "gtin",
             "in": "path",
             "description": "Global Trade Item Number of Product",
             "required": true,
@@ -1020,7 +1020,7 @@
         }
       }
     },
-    "/integration/{domain}/listBatchLangs/{GTIN}/{batchNumber}": {
+    "/integration/{domain}/listBatchLangs/{gtin}/{batchNumber}": {
       "get": {
         "tags": [
           "DSU Fabric"
@@ -1039,7 +1039,7 @@
             }
           },
           {
-            "name": "GTIN",
+            "name": "gtin",
             "in": "path",
             "description": "Global Trade Item Number of Product",
             "required": true,
