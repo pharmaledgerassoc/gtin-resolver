@@ -931,7 +931,7 @@
         }
       }
     },
-    "/integration/{domain}/listBatches/{start}/{number}/query": {
+    "/integration/{domain}/listBatches/{start}/{number}/{query}": {
       "get": {
         "tags": [
           "DSU Fabric"
@@ -969,6 +969,16 @@
               "type": "integer",
               "format": "int64",
               "example": 10
+            }
+          },
+          {
+            "name": "query",
+            "in": "path",
+            "description": "The search criteria",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "gtin == 00000000000000"
             }
           }
         ],
@@ -1350,7 +1360,10 @@
             "schema": {
               "type": "string"
             },
-            "enum": ["asc", "desc"]
+            "enum": [
+              "asc",
+              "desc"
+            ]
           },
           {
             "name": "query",
