@@ -51,7 +51,7 @@
     }
   ],
   "paths": {
-    "/integration/{domain}/addProduct/{gtin}": {
+    "/integration/{domain}/product/{gtin}": {
       "post": {
         "tags": [
           "Products"
@@ -101,9 +101,7 @@
             "description": "Server Error"
           }
         }
-      }
-    },
-    "/integration/{domain}/updateProduct/{gtin}": {
+      },
       "put": {
         "tags": [
           "Products"
@@ -148,6 +146,30 @@
           },
           "400": {
             "description": "Invalid Parameter"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "DSU Fabric"
+        ],
+        "summary": "Display metadata for products",
+        "description": "Returns the whole product metadata",
+        "operationId": "readProductsMetadata",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
           }
         }
       }
@@ -218,13 +240,13 @@
         }
       }
     },
-    "/integration/{domain}/product/addEPI/{gtin}": {
+    "/integration/{domain}/epi/{gtin}/{batchNumber}": {
       "post": {
         "tags": [
           "Products"
         ],
         "summary": "Add a new leaflet",
-        "description": "Adds a new leaflet to an existing product.",
+        "description": "Adds a new leaflet to an existing product or batch.",
         "operationId": "addEPItoProduct",
         "parameters": [
           {
@@ -241,6 +263,15 @@
             "in": "path",
             "description": "Global Trade Item Number of Product",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "batchNumber",
+            "in": "path",
+            "description": "Unique identifier of the batch",
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -264,16 +295,14 @@
             "description": "Invalid Parameter"
           }
         }
-      }
-    },
-    "/integration/{domain}/product/updateEPI/{gtin}": {
+      },
       "put": {
         "tags": [
           "Products"
         ],
         "summary": "Update a leaflet",
-        "description": "Updates the leaflet of an existing product.",
-        "operationId": "updateEPIforProduct",
+        "description": "Updates the leaflet of an existing product or batch.",
+        "operationId": "updateEpi",
         "parameters": [
           {
             "name": "domain",
@@ -289,6 +318,15 @@
             "in": "path",
             "description": "Global Trade Item Number of Product",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "batchNumber",
+            "in": "path",
+            "description": "Unique identifier of the batch",
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -312,15 +350,13 @@
             "description": "Invalid Parameter"
           }
         }
-      }
-    },
-    "/integration/{domain}/product/deleteEPI/{gtin}": {
+      },
       "delete": {
         "tags": [
           "Products"
         ],
         "summary": "Delete a leaflet",
-        "description": "Delete a leaflet of an existing product.",
+        "description": "Delete a leaflet of an existing product or batch.",
         "operationId": "deleteEPIofProduct",
         "parameters": [
           {
@@ -340,6 +376,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "batchNumber",
+            "in": "path",
+            "description": "Unique identifier of the batch",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -350,9 +395,42 @@
             "description": "Invalid Parameter"
           }
         }
+      },
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Retrieve a leaflet from a product",
+        "description": "Retrieve the XML and images that compose the leaflet of a product",
+        "operationId": "getProductLeaflet",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          },
+          "404": {
+            "description": "Leaflet not found"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
       }
     },
-    "/integration/{domain}/product/addImage/{gtin}": {
+    "/integration/{domain}/image/{gtin}": {
       "post": {
         "tags": [
           "Products"
@@ -398,9 +476,7 @@
             "description": "Invalid Parameter"
           }
         }
-      }
-    },
-    "/integration/{domain}/product/updateImage/{gtin}": {
+      },
       "put": {
         "tags": [
           "Products"
@@ -446,9 +522,33 @@
             "description": "Invalid Parameter"
           }
         }
+      },
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Retrieve a leaflet from a product",
+        "description": "Retrieve the XML and images that compose the leaflet of a product",
+        "operationId": "getProductLeaflet",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          }
+        }
       }
     },
-    "/integration/{domain}/addBatch/{gtin}/{batchNumber}": {
+    "/integration/{domain}/batch/{gtin}/{batchNumber}": {
       "post": {
         "tags": [
           "Batches"
@@ -504,9 +604,7 @@
             "description": "Invalid Parameter"
           }
         }
-      }
-    },
-    "/integration/{domain}/updateBatch/{gtin}/{batchNumber}": {
+      },
       "put": {
         "tags": [
           "Batches"
@@ -553,8 +651,33 @@
             "description": "Invalid Parameter"
           }
         }
+      },
+      "get": {
+        "tags": [
+          "DSU Fabric"
+        ],
+        "summary": "Display metadata for batch",
+        "description": "Returns the whole batch metadata",
+        "operationId": "readBatchMetadata",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "The blockchain domain",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
       }
     },
+
     "/integration/{domain}/updateBatchFromMessages": {
       "put": {
         "tags": [
@@ -614,244 +737,6 @@
           },
           "405": {
             "description": "Validation exception"
-          }
-        }
-      }
-    },
-    "/integration/{domain}/batch/addEPI/{gtin}/{batchNumber}": {
-      "post": {
-        "tags": [
-          "Batches"
-        ],
-        "summary": "Add a new leaflet",
-        "description": "Adds a new leaflet to an existing batch.",
-        "operationId": "addEPItoBatch",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "batchNumber",
-            "in": "path",
-            "description": "Unique identifier of the batch",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Add a new leaflet",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Leaflet"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Operation"
-          },
-          "400": {
-            "description": "Invalid Parameter"
-          }
-        }
-      }
-    },
-    "/integration/{domain}/batch/updateEPI/{gtin}/{batchNumber}": {
-      "put": {
-        "tags": [
-          "Batches"
-        ],
-        "summary": "Update a leaflet",
-        "description": "Updates the leaflet of an existing batch.",
-        "operationId": "updateEPIforBatch",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "batchNumber",
-            "in": "path",
-            "description": "Unique identifier of the batch",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Update a leaflet",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Leaflet"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Operation"
-          },
-          "400": {
-            "description": "Invalid Parameter"
-          }
-        }
-      }
-    },
-    "/integration/{domain}/batch/deleteEPI/{gtin}/{batchNumber}": {
-      "delete": {
-        "tags": [
-          "Batches"
-        ],
-        "summary": "Delete a leaflet",
-        "description": "Delete a leaflet of an existing batch.",
-        "operationId": "deleteEPIofBatch",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "batchNumber",
-            "in": "path",
-            "description": "Unique identifier of the batch",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Operation"
-          },
-          "400": {
-            "description": "Invalid Parameter"
-          }
-        }
-      }
-    },
-    "/integration/{domain}/readProductsMetadata": {
-      "get": {
-        "tags": [
-          "DSU Fabric"
-        ],
-        "summary": "Display metadata for products",
-        "description": "Returns the whole product metadata",
-        "operationId": "readProductsMetadata",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation"
-          }
-        }
-      }
-    },
-    "/integration/{domain}/readBatchMetadata": {
-      "get": {
-        "tags": [
-          "DSU Fabric"
-        ],
-        "summary": "Display metadata for batch",
-        "description": "Returns the whole batch metadata",
-        "operationId": "readBatchMetadata",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation"
-          }
-        }
-      }
-    },
-    "/integration/{domain}/getProductLeaflet": {
-      "get": {
-        "tags": [
-          "DSU Fabric"
-        ],
-        "summary": "Retrieve a leaflet from a product",
-        "description": "Retrieve the XML and images that compose the leaflet of a product",
-        "operationId": "getProductLeaflet",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Operation"
-          }
-        }
-      }
-    },
-    "/integration/{domain}/getBatchLeaflet": {
-      "get": {
-        "tags": [
-          "DSU Fabric"
-        ],
-        "summary": "Retrieve a leaflet from a batch",
-        "description": "Retrieve the XML and images that compose the leaflet of a batch",
-        "operationId": "getBatchLeaflet",
-        "parameters": [
-          {
-            "name": "domain",
-            "in": "path",
-            "description": "The blockchain domain",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Operation"
           }
         }
       }
