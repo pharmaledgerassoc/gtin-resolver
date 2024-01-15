@@ -171,6 +171,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "gtin",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -252,7 +261,7 @@
         }
       }
     },
-    "/integration/{domain}/epi/{gtin}/{batchNumber}": {
+    "/integration/{domain}/epi/{gtin}": {
       "post": {
         "tags": [
           "Products"
@@ -281,7 +290,7 @@
           },
           {
             "name": "batchNumber",
-            "in": "path",
+            "in": "query",
             "description": "Unique identifier of the batch",
             "required": false,
             "schema": {
@@ -336,7 +345,7 @@
           },
           {
             "name": "batchNumber",
-            "in": "path",
+            "in": "query",
             "description": "Unique identifier of the batch",
             "required": false,
             "schema": {
@@ -391,7 +400,7 @@
           },
           {
             "name": "batchNumber",
-            "in": "path",
+            "in": "query",
             "description": "Unique identifier of the batch",
             "required": false,
             "schema": {
@@ -421,6 +430,24 @@
             "in": "path",
             "description": "The blockchain domain",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "gtin",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "batchNumber",
+            "in": "query",
+            "description": "Unique identifier of the batch",
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -548,12 +575,21 @@
         ],
         "summary": "Retrieve a leaflet from a product",
         "description": "Retrieve the XML and images that compose the leaflet of a product",
-        "operationId": "getProductLeaflet",
+        "operationId": "getProductImage",
         "parameters": [
           {
             "name": "domain",
             "in": "path",
             "description": "The blockchain domain",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "gtin",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
             "required": true,
             "schema": {
               "type": "string"
@@ -642,6 +678,15 @@
             }
           },
           {
+            "name": "gtin",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "batchNumber",
             "in": "path",
             "description": "Unique identifier of the batch",
@@ -683,7 +728,25 @@
             "name": "domain",
             "in": "path",
             "description": "The blockchain domain",
-            "required": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "gtin",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "batchNumber",
+            "in": "path",
+            "description": "Unique identifier of the batch",
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -1235,11 +1298,7 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "enum": [
-              "asc",
-              "desc"
-            ]
+            }
           },
           {
             "name": "query",
@@ -1303,7 +1362,6 @@
                 "type": "string",
                 "maxLength": 14,
                 "minLength": 14,
-                "required": true,
                 "example": "02113111111164"
               },
               "internalMaterialCode": {
@@ -1312,12 +1370,10 @@
               },
               "inventedName": {
                 "type": "string",
-                "required": true,
                 "example": ""
               },
               "nameMedicinalProduct": {
                 "type": "string",
-                "required": true,
                 "example": ""
               },
               "strength": {
@@ -1330,20 +1386,16 @@
       },
       "Batch": {
         "type": "object",
-        "required": true,
         "properties": {
           "productCode": {
-            "type": "string",
-            "required": true
+            "type": "string"
           },
           "batch": {
-            "type": "string",
-            "required": true
+            "type": "string"
           },
           "expiryDate": {
             "type": "string",
-            "format": "date-time",
-            "required": true
+            "format": "date-time"
           },
           "packagingSiteName": {
             "type": "string"
@@ -1412,20 +1464,16 @@
         "type": "object",
         "properties": {
           "action": {
-            "type": "string",
-            "required": true
+            "type": "string"
           },
           "language": {
-            "type": "string",
-            "required": true
+            "type": "string"
           },
           "productCode": {
-            "type": "string",
-            "required": true
+            "type": "string"
           },
           "xmlFileContent": {
-            "type": "string",
-            "required": true
+            "type": "string"
           },
           "otherFilesContent": {
             "type": "array",
@@ -1433,12 +1481,10 @@
               "type": "object",
               "properties": {
                 "filename": {
-                  "type": "string",
-                  "required": true
+                  "type": "string"
                 },
                 "fileContent": {
-                  "type": "string",
-                  "required": true
+                  "type": "string"
                 }
               }
             }
@@ -1468,12 +1514,10 @@
         "type": "object",
         "properties": {
           "productCode": {
-            "type": "string",
-            "required": true
+            "type": "string"
           },
           "imageData": {
-            "type": "string",
-            "required": true
+            "type": "string"
           },
           "messageType": {
             "type": "string"
