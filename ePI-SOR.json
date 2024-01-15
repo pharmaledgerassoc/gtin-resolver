@@ -146,6 +146,12 @@
           },
           "400": {
             "description": "Invalid Parameter"
+          },
+          "404": {
+            "description": "Product not found"
+          },
+          "500": {
+            "description": "Server Error"
           }
         }
       },
@@ -169,7 +175,23 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful operation"
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          },
+          "404": {
+            "description": "Product not found"
+          },
+          "500": {
+            "description": "Server Error"
           }
         }
       }
@@ -219,23 +241,13 @@
         },
         "responses": {
           "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Product"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Pet not found"
+            "description": "Successful operation"
           },
           "405": {
             "description": "Validation exception"
+          },
+          "500": {
+            "description": "Server Error"
           }
         }
       }
@@ -416,7 +428,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful Operation"
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Leaflet"
+                }
+              }
+            }
           },
           "400": {
             "description": "Invalid Parameter"
@@ -677,7 +696,6 @@
         }
       }
     },
-
     "/integration/{domain}/updateBatchFromMessages": {
       "put": {
         "tags": [
@@ -720,23 +738,13 @@
         },
         "responses": {
           "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Product"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Pet not found"
+            "description": "Successful operation"
           },
           "405": {
             "description": "Validation exception"
+          },
+          "500": {
+            "description": "Server Error"
           }
         }
       }
@@ -907,10 +915,23 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful Operation"
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Invalid Parameter"
+          },
+          "404": {
+            "description": "Product not found"
           }
         }
       }
@@ -1007,23 +1028,13 @@
         },
         "responses": {
           "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Product"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Pet not found"
+            "description": "Successful operation"
           },
           "405": {
             "description": "Validation exception"
+          },
+          "500": {
+            "description": "Server Error"
           }
         }
       }
@@ -1076,23 +1087,13 @@
         },
         "responses": {
           "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Product"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Pet not found"
+            "description": "Successful operation"
           },
           "405": {
             "description": "Validation exception"
+          },
+          "500": {
+            "description": "Server Error"
           }
         }
       }
@@ -1145,28 +1146,18 @@
         },
         "responses": {
           "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Product"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Pet not found"
+            "description": "Successful operation"
           },
           "405": {
             "description": "Validation exception"
+          },
+          "500": {
+            "description": "Server Error"
           }
         }
       }
     },
-    "/audit/{domain}/addLog": {
+    "/audit/{domain}": {
       "post": {
         "tags": [
           "Audit"
@@ -1201,7 +1192,7 @@
         }
       }
     },
-    "/audit/{domain}/filterLogs/{start}/{number}/{sort}/{query}": {
+    "/audit/{domain}/{start}/{number}/{sort}/{query}": {
       "get": {
         "tags": [
           "Audit"
