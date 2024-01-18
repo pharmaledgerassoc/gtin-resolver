@@ -61,6 +61,10 @@ module.exports = {
   },
   getMappingsUtils: function () {
     return require("./lib/utils/CommonUtils");
+  },
+  getMockEPISORClient: function () {
+    const MockEPISORClient = require("./lib/integrationAPIs/clients/MockClient");
+    return new MockEPISORClient();
   }
 }
 
