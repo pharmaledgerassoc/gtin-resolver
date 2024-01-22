@@ -65,6 +65,9 @@ module.exports = {
   getMockEPISORClient: function (domain) {
     const MockEPISORClient = require("./lib/integrationAPIs/clients/MockClient");
     return MockEPISORClient.getInstance(domain);
+  },
+  getIntegrationAPIs: function (server) {
+    return require("./lib/integrationAPIs")(server);
   }
 }
 
