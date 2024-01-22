@@ -4,8 +4,8 @@ const assert = require("double-check").assert;
 const MockEPISORClient = require("../lib/integrationAPIs/clients/MockClient");
 
 assert.callback("MockEPISORClient Test Suite", async (callback) => {
-    const client = new MockEPISORClient();
     const domain = 'testDomain';
+    const client = MockEPISORClient.getInstance(domain);
     const gtin = '02113111111164';
     const batchNumber = 'B123';
     const language = 'en';
@@ -78,7 +78,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
     let error;
     try {
-        await $$.promisify(client.addProduct)(domain, gtin, productDetails);
+        await $$.promisify(client.addProduct)(gtin, productDetails);
     } catch (e) {
         error = e;
     }
@@ -86,7 +86,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
     error = undefined;
     try {
-        await $$.promisify(client.updateProduct)(domain, gtin, productDetails);
+        await $$.promisify(client.updateProduct)(gtin, productDetails);
     } catch (e) {
         error = e;
     }
@@ -94,7 +94,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
     error = undefined;
     try {
-        await $$.promisify(client.addEPIForProduct)(domain, gtin, leafletDetails);
+        await $$.promisify(client.addEPIForProduct)(gtin, leafletDetails);
     } catch (e) {
         error = e;
     }
@@ -103,7 +103,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
     error = undefined;
     let epi;
     try {
-        epi = await $$.promisify(client.getProductLeaflet)(domain, gtin, language);
+        epi = await $$.promisify(client.getProductLeaflet)(gtin, language);
     } catch (e) {
         error = e;
     }
@@ -113,7 +113,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
     error = undefined;
     leafletDetails.xmlFileContent = "newXmlFileContent";
     try {
-        await $$.promisify(client.updateEPIForProduct)(domain, gtin, leafletDetails);
+        await $$.promisify(client.updateEPIForProduct)(gtin, leafletDetails);
     } catch (e) {
         error = e;
     }
@@ -122,7 +122,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
     error = undefined;
     epi = undefined;
     try {
-        epi = await $$.promisify(client.getProductLeaflet)(domain, gtin, language);
+        epi = await $$.promisify(client.getProductLeaflet)(gtin, language);
     } catch (e) {
         error = e;
     }
@@ -131,7 +131,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
     error = undefined;
     try {
-        await $$.promisify(client.addProductImage)(domain, gtin, imageData);
+        await $$.promisify(client.addProductImage)(gtin, imageData);
     } catch (e) {
         error = e;
     }
@@ -139,7 +139,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
     let productPhoto;
     try {
-        productPhoto = await $$.promisify(client.getProductPhoto)(domain, gtin);
+        productPhoto = await $$.promisify(client.getProductPhoto)(gtin);
     } catch (e) {
         error = e;
     }
@@ -149,7 +149,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
     error = undefined;
     imageData.imageData = "newImageData";
     try {
-        await $$.promisify(client.updateProductImage)(domain, gtin, imageData);
+        await $$.promisify(client.updateProductImage)(gtin, imageData);
     } catch (e) {
         error = e;
     }
@@ -158,7 +158,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
     productPhoto = undefined;
     try {
-        productPhoto = await $$.promisify(client.getProductPhoto)(domain, gtin);
+        productPhoto = await $$.promisify(client.getProductPhoto)(gtin);
     } catch (e) {
         error = e;
     }
@@ -167,7 +167,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
     error = undefined;
     try {
-        await $$.promisify(client.addBatch)(domain, gtin, batchNumber, batchDetails);
+        await $$.promisify(client.addBatch)(gtin, batchNumber, batchDetails);
     } catch (e) {
         error = e;
     }
@@ -175,7 +175,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
     error = undefined;
     try {
-        await $$.promisify(client.updateBatch)(domain, gtin, batchNumber, batchDetails);
+        await $$.promisify(client.updateBatch)(gtin, batchNumber, batchDetails);
     } catch (e) {
         error = e;
     }
@@ -183,7 +183,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
     error = undefined;
     try {
-        await $$.promisify(client.deleteEPIofProduct)(domain, gtin, language);
+        await $$.promisify(client.deleteEPIofProduct)(gtin, language);
     } catch (e) {
         error = e;
     }
@@ -191,7 +191,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
     error = undefined;
     try {
-        await $$.promisify(client.addEPIForBatch)(domain, gtin, batchNumber, leafletDetails);
+        await $$.promisify(client.addEPIForBatch)(gtin, batchNumber, leafletDetails);
     } catch (e) {
         error = e;
     }
@@ -200,7 +200,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
     error = undefined;
     let batchLeaflet;
     try {
-        batchLeaflet = await $$.promisify(client.getBatchLeaflet)(domain, gtin, batchNumber, language);
+        batchLeaflet = await $$.promisify(client.getBatchLeaflet)(gtin, batchNumber, language);
     } catch (e) {
         error = e;
     }
@@ -212,7 +212,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
     leafletDetails.xmlFileContent = "newXmlFileContent2";
 
     try {
-        await $$.promisify(client.updateEPIForBatch)(domain, gtin, batchNumber, leafletDetails);
+        await $$.promisify(client.updateEPIForBatch)(gtin, batchNumber, leafletDetails);
     } catch (e) {
         error = e;
     }
@@ -222,7 +222,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
     error = undefined;
     batchLeaflet = undefined;
     try {
-        batchLeaflet = await $$.promisify(client.getBatchLeaflet)(domain, gtin, batchNumber, language);
+        batchLeaflet = await $$.promisify(client.getBatchLeaflet)(gtin, batchNumber, language);
     } catch (e) {
         error = e;
     }
@@ -232,7 +232,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
     error = undefined;
     try {
-        await $$.promisify(client.addEPIForBatch)(domain, gtin, batchNumber, germanLeaflet);
+        await $$.promisify(client.addEPIForBatch)(gtin, batchNumber, germanLeaflet);
     } catch (e) {
         error = e;
     }
@@ -241,7 +241,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
     error = undefined;
     let languages;
     try {
-        languages = await $$.promisify(client.listProductsLangs)(domain, gtin);
+        languages = await $$.promisify(client.listProductsLangs)(gtin);
     } catch (e) {
         error = e;
     }
@@ -250,7 +250,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
 
     try {
-        languages = await $$.promisify(client.listBatchLangs)(domain, gtin, batchNumber);
+        languages = await $$.promisify(client.listBatchLangs)(gtin, batchNumber);
     } catch (e) {
         error = e;
     }
