@@ -16,7 +16,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
         "receiverId": "QPNVS",
         "messageId": "S000001",
         "messageDateTime": "2023-01-11T09:10:01CET",
-        "product": {
+        "payload": {
             "productCode": "02113111111164",
             "internalMaterialCode": "",
             "inventedName": "BOUNTY",
@@ -31,7 +31,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
         "receiverId": "QPNVS",
         "messageId": "S000001",
         "messageDateTime": "2023-01-11T09:10:01CET",
-        "batch": {
+        "payload": {
             "productCode": "02113111111164",
             "batch": "B123",
             "packagingSiteName": "",
@@ -45,9 +45,11 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
         "receiverId": "QPNVS",
         "messageId": "S000001",
         "messageDateTime": "2023-01-11T09:10:01CET",
-        "productCode": "02113111111164",
-        "language": "en",
-        "xmlFileContent": "xmlFileContent"
+        "payload": {
+            "productCode": "02113111111164",
+            "language": "en",
+            "xmlFileContent": "xmlFileContent"
+        }
     }
 
     const germanLeaflet = {
@@ -57,9 +59,11 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
         "receiverId": "QPNVS",
         "messageId": "S000001",
         "messageDateTime": "2023-01-11T09:10:01CET",
-        "productCode": "02113111111164",
-        "language": "de",
-        "xmlFileContent": "xmlFileContent"
+        "payload": {
+            "productCode": "02113111111164",
+            "language": "de",
+            "xmlFileContent": "xmlFileContent"
+        }
     }
 
     const imageData = {
@@ -69,12 +73,48 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
         "receiverId": "QPNVS",
         "messageId": "S000001",
         "messageDateTime": "2023-01-11T09:10:01CET",
-        "productCode": "02113111111164",
-        "imageId": "123456789",
-        "imageType": "front",
-        "imageFormat": "png",
-        "imageData": "https://www.bayer.com/en/bayer-products/product-details/bounty-250-mg-0-68-ml-pre-filled-syringe"
+        "payload": {
+            "productCode": "02113111111164",
+            "imageId": "123456789",
+            "imageType": "front",
+            "imageFormat": "png",
+            "imageData": "https://www.bayer.com/en/bayer-products/product-details/bounty-250-mg-0-68-ml-pre-filled-syringe"
+        }
     }
+
+    const auditLog = {
+        "username": "user",
+        "reason": "Created Product",
+        "itemCode": "00000000031059",
+        "anchorId": "Z8s5VtVtfCHVyveRKwqUb3hciWfxDDzedykF9oBkj65Mn6DQi7oQFbt4Wjz7grswCvVRX6o3KEKGbefHb5fBxrHpeinvsLT4rrSfnKzuP9dozsYYyuqTbACWUqx2MoiRpaPSzCeRmeibn1vUT71ABjXejRio1",
+        "hashLink": "2HqJt69J687THmZfpfJ9iafoJtB2vUGE7wd8eQdYFW7j7EiUnLLNxGkQdz9J5dMpLZmL56b1mHkZSTmBz63tgJVTD7bQuiBf93wBjdPA4eM7PCrJgnQf4Hh1A6BZk8ssrqdo9jZ4dar7eaiLdWUFXg2DAp5KeHtaT2vikmR26hTCSyU39uQ1hZeR2YPwGLbGTkak7ueHU21gPJNupj1UX7Gpx7VFqN8FsGBxDfRP2Eevb",
+        "metadata": {
+            "gtin": "00000000031059"
+        },
+        "logInfo": {
+            "messageType": "Product",
+            "messageTypeVersion": 1,
+            "senderId": "nicoleta@axiologic.net",
+            "receiverId": "",
+            "messageId": "6733277145574",
+            "messageDateTime": "2024-01-23T13:04:50.881Z",
+            "token": "",
+            "payload": {
+                "inventedName": "BN1059",
+                "productCode": "00000000031059",
+                "nameMedicinalProduct": "NN1059",
+                "manufName": "",
+                "flagEnableAdverseEventReporting": false,
+                "flagEnableACFProductCheck": false,
+                "healthcarePractitionerInfo": "SmPC",
+                "patientSpecificLeaflet": "Patient Information",
+                "markets": [],
+                "internalMaterialCode": "",
+                "strength": ""
+            }
+        }
+    }
+
 
     let error;
     try {
@@ -94,7 +134,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
     error = undefined;
     try {
-        await $$.promisify(client.addEPIForProduct)(gtin, leafletDetails);
+        await $$.promisify(client.addEPI)(gtin, leafletDetails);
     } catch (e) {
         error = e;
     }
@@ -103,17 +143,17 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
     error = undefined;
     let epi;
     try {
-        epi = await $$.promisify(client.getProductLeaflet)(gtin, language);
+        epi = await $$.promisify(client.getEPI)(gtin, language);
     } catch (e) {
         error = e;
     }
     assert.true(error === undefined, "Error while getting product leaflet");
-    assert.true(epi.xmlFileContent === leafletDetails.xmlFileContent, "Leaflet details are not the same");
+    assert.true(epi.xmlFileContent === leafletDetails.payload.xmlFileContent, "Leaflet details are not the same");
 
     error = undefined;
-    leafletDetails.xmlFileContent = "newXmlFileContent";
+    leafletDetails.payload.xmlFileContent = "newXmlFileContent";
     try {
-        await $$.promisify(client.updateEPIForProduct)(gtin, leafletDetails);
+        await $$.promisify(client.updateEPI)(gtin, leafletDetails);
     } catch (e) {
         error = e;
     }
@@ -122,12 +162,12 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
     error = undefined;
     epi = undefined;
     try {
-        epi = await $$.promisify(client.getProductLeaflet)(gtin, language);
+        epi = await $$.promisify(client.getEPI)(gtin, language);
     } catch (e) {
         error = e;
     }
     assert.true(error === undefined, "Error while getting product leaflet");
-    assert.true(epi.xmlFileContent === leafletDetails.xmlFileContent, "Leaflet details are not the same");
+    assert.true(epi.xmlFileContent === leafletDetails.payload.xmlFileContent, "Leaflet details are not the same");
 
     error = undefined;
     try {
@@ -144,10 +184,10 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
         error = e;
     }
     assert.true(error === undefined, "Error while getting product image");
-    assert.true(productPhoto.imageData === imageData.imageData, "Image details are not the same");
+    assert.true(productPhoto.imageData === imageData.payload.imageData, "Image details are not the same");
 
     error = undefined;
-    imageData.imageData = "newImageData";
+    imageData.payload.imageData = "newImageData";
     try {
         await $$.promisify(client.updateProductImage)(gtin, imageData);
     } catch (e) {
@@ -163,7 +203,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
         error = e;
     }
     assert.true(error === undefined, "Error while getting product image");
-    assert.true(productPhoto.imageData === imageData.imageData, "Image details are not the same");
+    assert.true(productPhoto.imageData === imageData.payload.imageData, "Image details are not the same");
 
     error = undefined;
     try {
@@ -182,8 +222,28 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
     assert.true(error === undefined, "Error while updating batch");
 
     error = undefined;
+    let products;
     try {
-        await $$.promisify(client.deleteEPIofProduct)(gtin, language);
+        products = await $$.promisify(client.listProducts)(undefined, undefined, undefined, "productCode == 02113111111164");
+    } catch (e) {
+        error = e;
+    }
+    assert.true(error === undefined, "Error while listing products");
+    assert.true(products.length === 1, "Products are not the same");
+
+    error = undefined;
+    let batches;
+    try {
+        batches = await $$.promisify(client.listBatches)(undefined, undefined, undefined, "productCode == 02113111111164");
+    } catch (e) {
+        error = e;
+    }
+    assert.true(error === undefined, "Error while listing products");
+    assert.true(products.length === 1, "Products are not the same");
+
+    error = undefined;
+    try {
+        await $$.promisify(client.deleteEPI)(gtin, language);
     } catch (e) {
         error = e;
     }
@@ -191,28 +251,30 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
     error = undefined;
     try {
-        await $$.promisify(client.addEPIForBatch)(gtin, batchNumber, leafletDetails);
+        await $$.promisify(client.addEPI)(gtin, batchNumber, leafletDetails);
     } catch (e) {
         error = e;
+        throw e;
     }
     assert.true(error === undefined, "Error while adding EPI to batch");
 
     error = undefined;
     let batchLeaflet;
     try {
-        batchLeaflet = await $$.promisify(client.getBatchLeaflet)(gtin, batchNumber, language);
+        batchLeaflet = await $$.promisify(client.getEPI)(gtin, language, batchNumber);
     } catch (e) {
         error = e;
+        throw e
     }
     assert.true(error === undefined, "Error while getting batch leaflet");
-    assert.true(batchLeaflet.xmlFileContent === leafletDetails.xmlFileContent, "Leaflet details are not the same");
+    assert.true(batchLeaflet.xmlFileContent === leafletDetails.payload.xmlFileContent, "Leaflet details are not the same");
 
 
     error = undefined;
-    leafletDetails.xmlFileContent = "newXmlFileContent2";
+    leafletDetails.payload.xmlFileContent = "newXmlFileContent2";
 
     try {
-        await $$.promisify(client.updateEPIForBatch)(gtin, batchNumber, leafletDetails);
+        await $$.promisify(client.updateEPI)(gtin, batchNumber, leafletDetails);
     } catch (e) {
         error = e;
     }
@@ -222,17 +284,17 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
     error = undefined;
     batchLeaflet = undefined;
     try {
-        batchLeaflet = await $$.promisify(client.getBatchLeaflet)(gtin, batchNumber, language);
+        batchLeaflet = await $$.promisify(client.getEPI)(gtin, language, batchNumber);
     } catch (e) {
         error = e;
     }
     assert.true(error === undefined, "Error while getting batch leaflet");
-    assert.true(batchLeaflet.xmlFileContent === leafletDetails.xmlFileContent, "Leaflet details are not the same");
+    assert.true(batchLeaflet.xmlFileContent === leafletDetails.payload.xmlFileContent, "Leaflet details are not the same");
 
 
     error = undefined;
     try {
-        await $$.promisify(client.addEPIForBatch)(gtin, batchNumber, germanLeaflet);
+        await $$.promisify(client.addEPI)(gtin, batchNumber, germanLeaflet);
     } catch (e) {
         error = e;
     }
@@ -257,6 +319,32 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
     assert.true(error === undefined, "Error while getting languages");
     assert.true(languages.length === 2, "Languages are not the same");
 
+
+    error = undefined;
+    try {
+        await $$.promisify(client.addAuditLog)(auditLog);
+    } catch (e) {
+        error = e;
+    }
+    assert.true(error === undefined, "Error while adding audit log");
+
+    error = undefined;
+    try {
+        await $$.promisify(client.addAuditLog)(auditLog);
+    } catch (e) {
+        error = e;
+    }
+    assert.true(error === undefined, "Error while adding audit log");
+
+    error = undefined;
+    let auditLogs;
+    try {
+        auditLogs = await $$.promisify(client.filterAuditLogs)(0, undefined, undefined, "__timestamp > 0");
+    } catch (e) {
+        error = e;
+    }
+    assert.true(error === undefined, "Error while getting audit logs");
+    assert.true(auditLogs.length === 2, "Audit logs are not the same");
 
     callback();
 }, 100000);
