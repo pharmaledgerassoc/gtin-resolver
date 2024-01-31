@@ -7,7 +7,8 @@ const EpiSORIntegrationClient = require("../lib/integrationAPIs/clients/EpiSORIn
 const tir = require("../../opendsu-sdk/psknode/tests/util/tir");
 assert.callback("MockEPISORClient Test Suite", async (callback) => {
     const domain = 'testDomain';
-    const client = EpiSORIntegrationClient.getInstance(domain);
+    const subdomain = 'testSubdomain';
+    const client = EpiSORIntegrationClient.getInstance(domain, subdomain);
     const gtin = '02113111111164';
     const batchNumber = 'B123';
     const language = 'en';
@@ -136,12 +137,20 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
         }
     }
 
+    process.env.SSO_SECRETS_ENCRYPTION_KEY = "+WG9HhIoXGGSVq6cMlhy2P3vuiqz1O/WAaiF5JhXmnc=";
     await tir.launchConfigurableApiHubTestNodeAsync({
-        domains: [{name: domain, config: vaultDomainConfig}],
+        domains: [{name: domain, config: vaultDomainConfig}, {name:subdomain, config: vaultDomainConfig}],
         rootFolder: folder,
         serverConfig: serverConfig
     });
 
+    const secretsService = await require("apihub").getSecretsServiceInstanceAsync(folder);
+    const LightDBEnclaveFactory = require("../../gtin-resolver/lib/integrationAPIs/utils/LightDBEnclaveFactory");
+    const lightDBEnclaveFactory = new LightDBEnclaveFactory();
+    let secret;
+    const keySSISpace = require("opendsu").loadAPI("keyssi");
+    const seedSSI = await $$.promisify(keySSISpace.createSeedSSI)(domain);
+    await secretsService.putSecretInDefaultContainerAsync(lightDBEnclaveFactory.generateEnclaveName(domain, subdomain), seedSSI.base64Encode(seedSSI.getPrivateKey()))
     let error;
     try {
         await $$.promisify(client.addProduct)(gtin, productDetails);
