@@ -73,9 +73,6 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
         "messageId": "S000001",
         "messageDateTime": "2023-01-11T09:10:01CET",
         "productCode": "02113111111164",
-        "imageId": "123456789",
-        "imageType": "front",
-        "imageFormat": "png",
         "imageData": "https://www.bayer.com/en/bayer-products/product-details/bounty-250-mg-0-68-ml-pre-filled-syringe"
     }
 
@@ -160,6 +157,15 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
     assert.true(error === undefined, "Error while adding product");
 
     error = undefined;
+    let productMetadata;
+    try {
+        productMetadata = await $$.promisify(client.getProductMetadata)(gtin);
+    } catch (e) {
+        error = e;
+    }
+    assert.true(error === undefined, "Error while updating product");
+    assert.true(productMetadata.productCode === productDetails.product.productCode, "Product details are not the same");
+    error = undefined;
     try {
         await $$.promisify(client.updateProduct)(gtin, productDetails);
     } catch (e) {
@@ -169,44 +175,23 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
     error = undefined;
     try {
-        await $$.promisify(client.addEPI)(gtin, undefined, leafletDetails);
+        await $$.promisify(client.addBatch)(gtin, batchNumber, batchDetails);
     } catch (e) {
         error = e;
     }
-    assert.true(error === undefined, "Error while adding EPI to product");
+    assert.true(error === undefined, "Error while adding batch");
 
     error = undefined;
-    let epi;
     try {
-        epi = await $$.promisify(client.getProductLeaflet)(gtin, language);
+        await $$.promisify(client.updateBatch)(gtin, batchNumber, batchDetails);
     } catch (e) {
         error = e;
     }
-    assert.true(error === undefined, "Error while getting product leaflet");
-    assert.true(epi.xmlFileContent === leafletDetails.xmlFileContent, "Leaflet details are not the same");
-
-    error = undefined;
-    leafletDetails.xmlFileContent = "newXmlFileContent";
-    try {
-        await $$.promisify(client.updateEPIForProduct)(gtin, leafletDetails);
-    } catch (e) {
-        error = e;
-    }
-    assert.true(error === undefined, "Error while updating EPI for product");
-
-    error = undefined;
-    epi = undefined;
-    try {
-        epi = await $$.promisify(client.getProductLeaflet)(gtin, language);
-    } catch (e) {
-        error = e;
-    }
-    assert.true(error === undefined, "Error while getting product leaflet");
-    assert.true(epi.xmlFileContent === leafletDetails.xmlFileContent, "Leaflet details are not the same");
+    assert.true(error === undefined, "Error while updating batch");
 
     error = undefined;
     try {
-        await $$.promisify(client.addProductImage)(gtin, imageData);
+        await $$.promisify(client.addImage)(gtin, imageData);
     } catch (e) {
         error = e;
     }
@@ -214,7 +199,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
     let productPhoto;
     try {
-        productPhoto = await $$.promisify(client.getProductPhoto)(gtin);
+        productPhoto = await $$.promisify(client.getImage)(gtin);
     } catch (e) {
         error = e;
     }
@@ -242,35 +227,20 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
     error = undefined;
     try {
-        await $$.promisify(client.addBatch)(gtin, batchNumber, batchDetails);
+        await $$.promisify(client.addEPI)(gtin, undefined, leafletDetails);
     } catch (e) {
         error = e;
     }
-    assert.true(error === undefined, "Error while adding batch");
+    assert.true(error === undefined, "Error while adding EPI to product");
 
     error = undefined;
+    leafletDetails.xmlFileContent = "newXmlFileContent";
     try {
-        await $$.promisify(client.updateBatch)(gtin, batchNumber, batchDetails);
+        await $$.promisify(client.updateEPI)(gtin, leafletDetails);
     } catch (e) {
         error = e;
     }
-    assert.true(error === undefined, "Error while updating batch");
-
-    error = undefined;
-    try {
-        await $$.promisify(client.deleteEPIofProduct)(gtin, language);
-    } catch (e) {
-        error = e;
-    }
-    assert.true(error === undefined, "Error while deleting EPI of product");
-
-    error = undefined;
-    try {
-        await $$.promisify(client.addEPIForBatch)(gtin, batchNumber, leafletDetails);
-    } catch (e) {
-        error = e;
-    }
-    assert.true(error === undefined, "Error while adding EPI to batch");
+    assert.true(error === undefined, "Error while updating EPI for product");
 
     error = undefined;
     let batchLeaflet;
