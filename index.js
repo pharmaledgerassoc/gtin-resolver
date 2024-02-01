@@ -9,6 +9,7 @@ const LeafletFeatureManager = require("./lib/LeafletFeatureManager");
 const LeafletInfoService = require("./lib/services/LeafletInfoService");
 const DSUFabricUtils = require("./lib/utils/DSUFabricUtils");
 const Languages = require("./lib/utils/Languages");
+const Countries = require("./lib/utils/Countries");
 const UploadTypes = require("./lib/utils/UploadTypes");
 const XMLDisplayService = require("./lib/services/XMLDisplayService/XMLDisplayService");
 const utils = require("./lib/utils/CommonUtils");
@@ -26,6 +27,7 @@ module.exports = {
   DSUFabricUtils,
   UploadTypes,
   Languages,
+  Countries,
   utils,
   logUtils,
   validationUtils,
