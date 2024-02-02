@@ -19,7 +19,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
         "receiverId": "QPNVS",
         "messageId": "S000001",
         "messageDateTime": "2023-01-11T09:10:01CET",
-        "product": {
+        "payload": {
             "productCode": "02113111111164",
             "internalMaterialCode": "",
             "inventedName": "BOUNTY",
@@ -34,37 +34,15 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
         "receiverId": "QPNVS",
         "messageId": "S000001",
         "messageDateTime": "2023-01-11T09:10:01CET",
-        "batch": {
+        "payload": {
             "productCode": "02113111111164",
             "batch": "B123",
             "packagingSiteName": "",
             "expiryDate": "230600"
         }
     };
-    const leafletDetails = {
-        "messageType": "leaflet",
-        "messageTypeVersion": 1,
-        "senderId": "ManualUpload",
-        "receiverId": "QPNVS",
-        "messageId": "S000001",
-        "messageDateTime": "2023-01-11T09:10:01CET",
-        "productCode": "02113111111164",
-        "language": "en",
-        "xmlFileContent": "xmlFileContent"
-    }
 
-    const germanLeaflet = {
-        "messageType": "leaflet",
-        "messageTypeVersion": 1,
-        "senderId": "ManualUpload",
-        "receiverId": "QPNVS",
-        "messageId": "S000001",
-        "messageDateTime": "2023-01-11T09:10:01CET",
-        "productCode": "02113111111164",
-        "language": "de",
-        "xmlFileContent": "xmlFileContent"
-    }
-
+    const leafletDetails = require("./leaflet.json");
     const imageData = {
         "messageType": "ProductPhoto",
         "messageTypeVersion": 1,
@@ -72,8 +50,10 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
         "receiverId": "QPNVS",
         "messageId": "S000001",
         "messageDateTime": "2023-01-11T09:10:01CET",
-        "productCode": "02113111111164",
-        "imageData": "https://www.bayer.com/en/bayer-products/product-details/bounty-250-mg-0-68-ml-pre-filled-syringe"
+        "payload": {
+            "productCode": "02113111111164",
+            "imageData": "https://www.bayer.com/en/bayer-products/product-details/bounty-250-mg-0-68-ml-pre-filled-syringe"
+        }
     }
 
     const vaultDomainConfig = {
@@ -136,7 +116,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
     process.env.SSO_SECRETS_ENCRYPTION_KEY = "+WG9HhIoXGGSVq6cMlhy2P3vuiqz1O/WAaiF5JhXmnc=";
     await tir.launchConfigurableApiHubTestNodeAsync({
-        domains: [{name: domain, config: vaultDomainConfig}, {name:subdomain, config: vaultDomainConfig}],
+        domains: [{name: domain, config: vaultDomainConfig}, {name: subdomain, config: vaultDomainConfig}],
         rootFolder: folder,
         serverConfig: serverConfig
     });
@@ -164,7 +144,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
         error = e;
     }
     assert.true(error === undefined, "Error while updating product");
-    assert.true(productMetadata.productCode === productDetails.product.productCode, "Product details are not the same");
+    assert.true(productMetadata.productCode === productDetails.payload.productCode, "Product details are not the same");
     error = undefined;
     try {
         await $$.promisify(client.updateProduct)(gtin, productDetails);
@@ -180,6 +160,16 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
         error = e;
     }
     assert.true(error === undefined, "Error while adding batch");
+
+    error = undefined;
+    let batchMetadata;
+    try {
+        batchMetadata = await $$.promisify(client.getBatchMetadata)(gtin, batchNumber);
+    } catch (e) {
+        error = e;
+    }
+    assert.true(error === undefined, "Error while getting batch metadata");
+    assert.true(batchMetadata.batch === batchDetails.payload.batch, "Batch details are not the same");
 
     error = undefined;
     try {
@@ -204,12 +194,12 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
         error = e;
     }
     assert.true(error === undefined, "Error while getting product image");
-    assert.true(productPhoto.imageData === imageData.imageData, "Image details are not the same");
+    assert.true(productPhoto === imageData.payload.imageData, "Image details are not the same");
 
     error = undefined;
-    imageData.imageData = "newImageData";
+    imageData.payload.imageData = "newImageData";
     try {
-        await $$.promisify(client.updateProductImage)(gtin, imageData);
+        await $$.promisify(client.updateImage)(gtin, imageData);
     } catch (e) {
         error = e;
     }
@@ -218,12 +208,12 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
 
     productPhoto = undefined;
     try {
-        productPhoto = await $$.promisify(client.getProductPhoto)(gtin);
+        productPhoto = await $$.promisify(client.getImage)(gtin);
     } catch (e) {
         error = e;
     }
     assert.true(error === undefined, "Error while getting product image");
-    assert.true(productPhoto.imageData === imageData.imageData, "Image details are not the same");
+    assert.true(productPhoto === imageData.payload.imageData, "Image details are not the same");
 
     error = undefined;
     try {
