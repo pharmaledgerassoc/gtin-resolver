@@ -145,6 +145,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
     }
     assert.true(error === undefined, "Error while updating product");
     assert.true(productMetadata.productCode === productDetails.payload.productCode, "Product details are not the same");
+
     error = undefined;
     try {
         await $$.promisify(client.updateProduct)(gtin, productDetails);
@@ -153,6 +154,24 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
     }
     assert.true(error === undefined, "Error while updating product");
 
+    error = undefined;
+    try {
+        await $$.promisify(client.addBatch)(gtin, batchNumber, batchDetails);
+    } catch (e) {
+        error = e;
+    }
+    assert.true(error === undefined, "Error while adding batch");
+
+    error = undefined;
+    let products;
+    try {
+        products = await $$.promisify(client.listProducts)(0, 10, "__timestamp > 0", "asc");
+    } catch (e) {
+        error = e;
+    }
+    assert.true(error === undefined, "Error while getting products");
+    assert.true(products.length === 1, "Products length is not the same");
+    assert.true(products[0].productCode === productDetails.payload.productCode, "Product details are not the same");
     error = undefined;
     try {
         await $$.promisify(client.addBatch)(gtin, batchNumber, batchDetails);
@@ -178,6 +197,17 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
         error = e;
     }
     assert.true(error === undefined, "Error while updating batch");
+
+    error = undefined;
+    let batches;
+    try {
+        batches = await $$.promisify(client.listBatches)(0, 10, "__timestamp > 0", "asc");
+    } catch (e) {
+        error = e;
+    }
+    assert.true(error === undefined, "Error while getting batches");
+    assert.true(batches.length === 1, "Batches length is not the same");
+    assert.true(batches[0].productCode === batchDetails.payload.productCode, "Batches details are not the same");
 
     error = undefined;
     try {
