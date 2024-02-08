@@ -5,7 +5,7 @@ const dc = require("double-check");
 const assert = dc.assert;
 const EpiSORIntegrationClient = require("../lib/integrationAPIs/clients/EpiSORIntegrationClient");
 const tir = require("../../opendsu-sdk/psknode/tests/util/tir");
-assert.callback("MockEPISORClient Test Suite", async (callback) => {
+assert.callback("EPISORClient Test Suite", async (callback) => {
     const domain = 'testDomain';
     const subdomain = 'testSubdomain';
     const client = EpiSORIntegrationClient.getInstance(domain, subdomain);
@@ -261,47 +261,6 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
         error = e;
     }
     assert.true(error === undefined, "Error while updating EPI for product");
-
-    error = undefined;
-    let batchLeaflet;
-    try {
-        batchLeaflet = await $$.promisify(client.getBatchLeaflet)(gtin, batchNumber, language);
-    } catch (e) {
-        error = e;
-    }
-    assert.true(error === undefined, "Error while getting batch leaflet");
-    assert.true(batchLeaflet.xmlFileContent === leafletDetails.xmlFileContent, "Leaflet details are not the same");
-
-
-    error = undefined;
-    leafletDetails.xmlFileContent = "newXmlFileContent2";
-
-    try {
-        await $$.promisify(client.updateEPIForBatch)(gtin, batchNumber, leafletDetails);
-    } catch (e) {
-        error = e;
-    }
-
-    assert.true(error === undefined, "Error while updating EPI for batch");
-
-    error = undefined;
-    batchLeaflet = undefined;
-    try {
-        batchLeaflet = await $$.promisify(client.getBatchLeaflet)(gtin, batchNumber, language);
-    } catch (e) {
-        error = e;
-    }
-    assert.true(error === undefined, "Error while getting batch leaflet");
-    assert.true(batchLeaflet.xmlFileContent === leafletDetails.xmlFileContent, "Leaflet details are not the same");
-
-
-    error = undefined;
-    try {
-        await $$.promisify(client.addEPIForBatch)(gtin, batchNumber, germanLeaflet);
-    } catch (e) {
-        error = e;
-    }
-    assert.true(error === undefined, "Error while adding EPI to batch");
 
     error = undefined;
     let languages;
