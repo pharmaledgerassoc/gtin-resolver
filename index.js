@@ -19,57 +19,61 @@ const versionTransformer = require("./lib/EpiVersionTransformer")
 const constants = require("./lib/constants/constants");
 
 module.exports = {
-  createGTIN_SSI,
-  parseGTIN_SSI,
-  DSUFabricFeatureManager,
-  LeafletFeatureManager,
-  LeafletInfoService,
-  DSUFabricUtils,
-  UploadTypes,
-  Languages,
-  Countries,
-  utils,
-  logUtils,
-  validationUtils,
-  versionTransformer,
-  constants,
-  XMLDisplayService,
-  loadApi: function (apiName) {
-    switch (apiName) {
-      case "mappings":
-        return require("./lib/mappings");
-      case "services":
-        return require("./lib/services");
+    createGTIN_SSI,
+    parseGTIN_SSI,
+    DSUFabricFeatureManager,
+    LeafletFeatureManager,
+    LeafletInfoService,
+    DSUFabricUtils,
+    UploadTypes,
+    Languages,
+    Countries,
+    utils,
+    logUtils,
+    validationUtils,
+    versionTransformer,
+    constants,
+    XMLDisplayService,
+    loadApi: function (apiName) {
+        switch (apiName) {
+            case "mappings":
+                return require("./lib/mappings");
+            case "services":
+                return require("./lib/services");
+        }
+    },
+    getEPIMappingEngineForAPIHUB: function (server) {
+        return require("./lib/apihubMappingEngine").getEPIMappingEngineForAPIHUB(server);
+    },
+    getEPIMappingEngineMessageResults: function (server) {
+        return require("./lib/apihubMappingEngineMessageResults").getEPIMappingEngineMessageResults(server);
+    },
+    getWebLeaflet: function (server) {
+        return require("./lib/leaflet-web-api").getWebLeaflet(server);
+    },
+    getGTINOwner: function (server) {
+        return require("./lib/gtinOwner").getGTINOwner(server);
+    },
+    getMessagesPipe: function () {
+        const opendsu = require("opendsu");
+        return opendsu.loadApi("m2dsu").getMessagesPipe();
+    },
+    getErrorsMap: function () {
+        return require("opendsu").loadApi("m2dsu").getErrorsMap();
+    },
+    getMappingsUtils: function () {
+        return require("./lib/utils/CommonUtils");
+    },
+    getMockEPISORClient: function (domain) {
+        const MockEPISORClient = require("./lib/integrationAPIs/clients/MockClient");
+        return MockEPISORClient.getInstance(domain);
+    },
+    getEPISorClient: function (domain, subdomain) {
+        const EPISORClient = require("./lib/integrationAPIs/clients/EpiSORIntegrationClient");
+        return EPISORClient.getInstance(domain, subdomain);
+    },
+    getIntegrationAPIs: function (server) {
+        return require("./lib/integrationAPIs")(server);
     }
-  },
-  getEPIMappingEngineForAPIHUB: function (server) {
-    return require("./lib/apihubMappingEngine").getEPIMappingEngineForAPIHUB(server);
-  },
-  getEPIMappingEngineMessageResults: function (server) {
-    return require("./lib/apihubMappingEngineMessageResults").getEPIMappingEngineMessageResults(server);
-  },
-  getWebLeaflet: function (server) {
-    return require("./lib/leaflet-web-api").getWebLeaflet(server);
-  },
-  getGTINOwner: function (server){
-    return require("./lib/gtinOwner").getGTINOwner(server);
-  },
-  getMessagesPipe: function () {
-    const opendsu = require("opendsu");
-    return opendsu.loadApi("m2dsu").getMessagesPipe();
-  },
-  getErrorsMap: function () {
-    return require("opendsu").loadApi("m2dsu").getErrorsMap();
-  },
-  getMappingsUtils: function () {
-    return require("./lib/utils/CommonUtils");
-  },
-  getMockEPISORClient: function (domain) {
-    const MockEPISORClient = require("./lib/integrationAPIs/clients/MockClient");
-    return MockEPISORClient.getInstance(domain);
-  },
-  getIntegrationAPIs: function (server) {
-    return require("./lib/integrationAPIs")(server);
-  }
 }
 
