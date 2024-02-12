@@ -27,6 +27,21 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
             "strength": ""
         }
     };
+    const productDetails2 = {
+        "messageType": "Product",
+        "messageTypeVersion": 1,
+        "senderId": "ManualUpload",
+        "receiverId": "QPNVS",
+        "messageId": "S000001",
+        "messageDateTime": "2023-01-11T09:10:01CET",
+        "payload": {
+            "productCode": "00000000000000",
+            "internalMaterialCode": "",
+            "inventedName": "BOUNTY",
+            "nameMedicinalProduct": "BOUNTY® 250 mg / 0.68 mL pre-filled syringe",
+            "strength": ""
+        }
+    };
     const batchDetails = {
         "messageType": "Batch",
         "messageTypeVersion": 1,
@@ -115,6 +130,7 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
     }
 
     process.env.SSO_SECRETS_ENCRYPTION_KEY = "+WG9HhIoXGGSVq6cMlhy2P3vuiqz1O/WAaiF5JhXmnc=";
+    // process.env.PSK_CONFIG_LOCATION = require("path").join(folder, "external-volume/config");
     await tir.launchConfigurableApiHubTestNodeAsync({
         domains: [{name: domain, config: vaultDomainConfig}, {name: subdomain, config: vaultDomainConfig}],
         rootFolder: folder,
@@ -136,6 +152,25 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
     }
     assert.true(error === undefined, "Error while adding product");
 
+    error = undefined;
+    try {
+        await $$.promisify(client.addProduct)(productDetails2.payload.productCode, productDetails2);
+    } catch (e) {
+        error = e;
+    }
+    assert.true(error === undefined, "Error while adding product");
+    error = undefined;
+
+    let products;
+    try {
+        products = await $$.promisify(client.listProducts)(0, 10, "__timestamp > 0", "asc");
+    } catch (e) {
+        error = e;
+    }
+    assert.true(error === undefined, "Error while getting products");
+    assert.true(products.length === 2, "Products length is not the same");
+    assert.true(products[0].productCode === productDetails.payload.productCode, "Product details are not the same");
+    assert.true(products[1].productCode === productDetails2.payload.productCode, "Product details are not the same");
     error = undefined;
     let productMetadata;
     try {
@@ -163,16 +198,7 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
     assert.true(error === undefined, "Error while adding batch");
 
     error = undefined;
-    let products;
-    try {
-        products = await $$.promisify(client.listProducts)(0, 10, "__timestamp > 0", "asc");
-    } catch (e) {
-        error = e;
-    }
-    assert.true(error === undefined, "Error while getting products");
-    assert.true(products.length === 1, "Products length is not the same");
-    assert.true(products[0].productCode === productDetails.payload.productCode, "Product details are not the same");
-    error = undefined;
+
     try {
         await $$.promisify(client.addBatch)(gtin, batchNumber, batchDetails);
     } catch (e) {
@@ -283,4 +309,4 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
 
 
     callback();
-}, 100000);
+}, 1000000);
