@@ -5,6 +5,8 @@ const dc = require("double-check");
 const assert = dc.assert;
 const EpiSORIntegrationClient = require("../lib/integrationAPIs/clients/EpiSORIntegrationClient");
 const tir = require("../../opendsu-sdk/psknode/tests/util/tir");
+const leafletDetails = require("./leaflet.json");
+
 assert.callback("EPISORClient Test Suite", async (callback) => {
     const domain = 'testDomain';
     const subdomain = 'testSubdomain';
@@ -273,20 +275,11 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
 
     error = undefined;
     try {
-        await $$.promisify(client.addEPI)(gtin, undefined, leafletDetails);
+        await $$.promisify(client.addProductEPI)(gtin, leafletDetails);
     } catch (e) {
         error = e;
     }
     assert.true(error === undefined, "Error while adding EPI to product");
-
-    error = undefined;
-    leafletDetails.xmlFileContent = "newXmlFileContent";
-    try {
-        await $$.promisify(client.updateEPI)(gtin, leafletDetails);
-    } catch (e) {
-        error = e;
-    }
-    assert.true(error === undefined, "Error while updating EPI for product");
 
     error = undefined;
     let languages;
@@ -296,7 +289,17 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
         error = e;
     }
     assert.true(error === undefined, "Error while getting languages");
-    // assert.true(languages.length === 1, "Languages are not the same");
+    assert.true(languages.length === 1, "Leaflet not added properly on product");
+
+    //test epi add/update on batch
+    leafletDetails.language = "de";
+    error = undefined;
+    try {
+        await $$.promisify(client.addBatchEPI)(gtin, batchNumber, leafletDetails);
+    } catch (e) {
+        error = e;
+    }
+    assert.true(error === undefined, "Error while adding EPI to batch");
 
 
     try {
@@ -305,7 +308,43 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
         error = e;
     }
     assert.true(error === undefined, "Error while getting languages");
-    assert.true(languages.length === 2, "Languages are not the same");
+    assert.true(languages.length === 1, "Leaflet not added properly on batch");
+
+    error = undefined;
+    leafletDetails.xmlFileContent = "newXmlFileContent";
+    try {
+        await $$.promisify(client.updateProductEPI)(gtin, leafletDetails);
+    } catch (e) {
+        error = e;
+    }
+    assert.true(error === undefined, "Error while updating EPI for product");
+
+
+    error = undefined;
+    leafletDetails.xmlFileContent = "newXmlFileContent";
+    try {
+        await $$.promisify(client.updateBatchEPI)(gtin, batchNumber, leafletDetails);
+    } catch (e) {
+        error = e;
+    }
+    assert.true(error === undefined, "Error while updating EPI for batch");
+
+    error = undefined;
+    try {
+        let result = await $$.promisify(client.addBatchEPI)(gtin, null, leafletDetails);
+        assert.true(typeof result === "string", "Missing batchNumber. Result should be a string.");
+    } catch (e) {
+        error = e;
+    }
+
+    error = undefined;
+    leafletDetails.xmlFileContent = "newXmlFileContent";
+    try {
+        let result = await $$.promisify(client.updateBatchEPI)(gtin, null, leafletDetails);
+        assert.true(typeof result === "string", "Missing batchNumber. Result should be a string.");
+    } catch (e) {
+        error = e;
+    }
 
 
     callback();
