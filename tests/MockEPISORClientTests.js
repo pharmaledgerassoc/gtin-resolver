@@ -303,7 +303,7 @@ assert.callback("MockEPISORClient Test Suite", async (callback) => {
     error = undefined;
     let languages;
     try {
-        languages = await $$.promisify(client.listProductsLangs)(gtin);
+        languages = await $$.promisify(client.listProductLangs)(gtin);
     } catch (e) {
         error = e;
     }
