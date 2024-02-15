@@ -948,14 +948,14 @@
         }
       }
     },
-    "/integration/{domain}/listProductsLangs/{gtin}": {
+    "/integration/{domain}/listProductLangs/{gtin}": {
       "get": {
         "tags": [
           "DSU Fabric"
         ],
         "summary": "List product languages",
         "description": "Returns the list of languages supported by the product",
-        "operationId": "listProductsLangs",
+        "operationId": "listProductLangs",
         "parameters": [
           {
             "name": "domain",
