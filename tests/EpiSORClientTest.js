@@ -284,7 +284,7 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
     error = undefined;
     let languages;
     try {
-        languages = await $$.promisify(client.listProductLangs)(gtin);
+        languages = await $$.promisify(client.listProductLangs)(gtin, "leaflet");
     } catch (e) {
         error = e;
     }
@@ -303,7 +303,7 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
 
 
     try {
-        languages = await $$.promisify(client.listBatchLangs)(gtin, batchNumber);
+        languages = await $$.promisify(client.listBatchLangs)(gtin, batchNumber, "leaflet");
     } catch (e) {
         error = e;
     }
