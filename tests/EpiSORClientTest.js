@@ -346,6 +346,16 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
         error = e;
     }
 
+    error = undefined;
+    let logs;
+    try {
+        logs = await $$.promisify(client.filterAuditLogs)(0, 10, "__timestamp > 0", "asc");
+    } catch (e) {
+        error = e;
+    }
+
+    assert.true(error === undefined, "Error while getting audit logs");
+    assert.true(logs.length === 10, "Logs length is not the same");
 
     callback();
 }, 1000000);
