@@ -275,7 +275,7 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
 
     error = undefined;
     try {
-        await $$.promisify(client.addProductEPI)(gtin, leafletDetails);
+        await $$.promisify(client.addProductEPI)(gtin, "en", "leaflet", leafletDetails);
     } catch (e) {
         error = e;
     }
@@ -291,11 +291,26 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
     assert.true(error === undefined, "Error while getting languages");
     assert.true(languages.length === 1, "Leaflet not added properly on product");
 
-    //test epi add/update on batch
-    leafletDetails.language = "de";
     error = undefined;
     try {
-        await $$.promisify(client.addBatchEPI)(gtin, batchNumber, leafletDetails);
+        await $$.promisify(client.deleteProductEPI)(gtin, "en", "leaflet");
+    } catch (e) {
+        error = e;
+    }
+    assert.true(error === undefined, "Error while deleting EPI from product");
+
+    //test epi add/update on batch
+    error = undefined;
+    try {
+        await $$.promisify(client.addBatchEPI)(gtin, batchNumber, "en", "leaflet", leafletDetails);
+    } catch (e) {
+        error = e;
+    }
+    assert.true(error === undefined, "Error while adding EPI to batch");
+
+    error = undefined;
+    try {
+        await $$.promisify(client.addBatchEPI)(gtin, batchNumber, "de", "leaflet", leafletDetails);
     } catch (e) {
         error = e;
     }
@@ -308,12 +323,12 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
         error = e;
     }
     assert.true(error === undefined, "Error while getting languages");
-    assert.true(languages.length === 1, "Leaflet not added properly on batch");
+    assert.true(languages.length === 2, "Leaflet not added properly on batch");
 
     error = undefined;
     leafletDetails.xmlFileContent = "newXmlFileContent";
     try {
-        await $$.promisify(client.updateProductEPI)(gtin, leafletDetails);
+        await $$.promisify(client.updateProductEPI)(gtin, "en", "leaflet", leafletDetails);
     } catch (e) {
         error = e;
     }
@@ -323,28 +338,11 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
     error = undefined;
     leafletDetails.xmlFileContent = "newXmlFileContent";
     try {
-        await $$.promisify(client.updateBatchEPI)(gtin, batchNumber, leafletDetails);
+        await $$.promisify(client.updateBatchEPI)(gtin, batchNumber, "en", "leaflet", leafletDetails);
     } catch (e) {
         error = e;
     }
     assert.true(error === undefined, "Error while updating EPI for batch");
-
-    error = undefined;
-    try {
-        let result = await $$.promisify(client.addBatchEPI)(gtin, null, leafletDetails);
-        assert.true(typeof result === "string", "Missing batchNumber. Result should be a string.");
-    } catch (e) {
-        error = e;
-    }
-
-    error = undefined;
-    leafletDetails.xmlFileContent = "newXmlFileContent";
-    try {
-        let result = await $$.promisify(client.updateBatchEPI)(gtin, null, leafletDetails);
-        assert.true(typeof result === "string", "Missing batchNumber. Result should be a string.");
-    } catch (e) {
-        error = e;
-    }
 
     error = undefined;
     let logs;
