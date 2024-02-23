@@ -132,6 +132,8 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
     }
 
     process.env.SSO_SECRETS_ENCRYPTION_KEY = "+WG9HhIoXGGSVq6cMlhy2P3vuiqz1O/WAaiF5JhXmnc=";
+    // process.env.EPI_DOMAIN = domain;
+    // process.env.EPI_SUBDOMAIN = subdomain;
     // process.env.PSK_CONFIG_LOCATION = require("path").join(folder, "external-volume/config");
     await tir.launchConfigurableApiHubTestNodeAsync({
         domains: [{name: domain, config: vaultDomainConfig}, {name: subdomain, config: vaultDomainConfig}],
