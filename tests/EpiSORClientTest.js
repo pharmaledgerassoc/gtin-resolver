@@ -349,7 +349,7 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
     error = undefined;
     let logs;
     try {
-        logs = await $$.promisify(client.filterAuditLogs)(0, 10, "__timestamp > 0", "asc");
+        logs = await $$.promisify(client.filterAuditLogs)("userAction", 0, 10, "__timestamp > 0", "asc");
     } catch (e) {
         error = e;
     }
