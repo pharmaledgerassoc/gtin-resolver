@@ -26,7 +26,7 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
             "internalMaterialCode": "",
             "inventedName": "BOUNTY",
             "nameMedicinalProduct": "BOUNTY® 250 mg / 0.68 mL pre-filled syringe",
-            "strength": ""
+            "strengths": []
         }
     };
     const productDetails2 = {
@@ -41,7 +41,7 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
             "internalMaterialCode": "",
             "inventedName": "BOUNTY",
             "nameMedicinalProduct": "BOUNTY® 250 mg / 0.68 mL pre-filled syringe",
-            "strength": ""
+            "strengths": []
         }
     };
     const batchDetails = {
@@ -53,7 +53,7 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
         "messageDateTime": "2023-01-11T09:10:01CET",
         "payload": {
             "productCode": "02113111111164",
-            "batch": "B123",
+            "batch": "B/123",
             "packagingSiteName": "",
             "expiryDate": "230600"
         }
@@ -129,7 +129,7 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
 
     const secretsService = await require("apihub").getSecretsServiceInstanceAsync(folder);
     const LightDBEnclaveFactory = require("../../gtin-resolver/lib/integrationAPIs/utils/LightDBEnclaveFactory");
-    const lightDBEnclaveFactory = new LightDBEnclaveFactory();
+    const lightDBEnclaveFactory = LightDBEnclaveFactory.getLightDBEnclaveFactoryInstance();
     let secret;
     const keySSISpace = require("opendsu").loadAPI("keyssi");
     const seedSSI = await $$.promisify(keySSISpace.createSeedSSI)(domain);
@@ -173,11 +173,21 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
 
     error = undefined;
     try {
-        await $$.promisify(client.addBatch)(gtin, batchNumber, batchDetails);
+        await $$.promisify(client.addBatch)(gtin, batchDetails.payload.batch, batchDetails);
     } catch (e) {
         error = e;
     }
     assert.true(error === undefined, "Error while adding batch");
+
+    error = undefined;
+    let batchMetadata;
+    try {
+        batchMetadata = await $$.promisify(client.getBatchMetadata)(gtin, batchDetails.payload.batch);
+    } catch (e) {
+        error = e;
+    }
+    assert.true(error === undefined, "Error while adding batch");
+    assert.true(batchMetadata.productCode === batchDetails.payload.productCode, "Batch details are not the same");
 
     error = undefined;
     productDetails.payload.nameMedicinalProduct = "newName";
