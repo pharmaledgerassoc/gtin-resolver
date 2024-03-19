@@ -9,12 +9,12 @@ const path = require("path");
 const fs = require("fs");
 
 // Function to measure execution time
-async function measureApiPerformance(apiFunction, apiArgs, repetitions = 1) {
+async function measureApiPerformance(apiFunction, repetitions = 2) {
     const start = Date.now();
     const promises = [];
 
     for (let i = 0; i < repetitions; i++) {
-        promises.push(apiFunction.apply(null, apiArgs));
+        promises.push(apiFunction());
     }
 
     try {
@@ -213,44 +213,99 @@ assert.callback("EPISORClient Write API Performance Tests", async (callback) => 
     // --- Performance Tests ---
 // Test for addProduct
     console.log('Testing addProduct performance...');
-    await measureApiPerformance(client.addProduct.bind(client), [gtin, productDetails], 2);
+    const generatedGTINs = [];
+    const generatedBatchNumbers = [];
+    function generateRandomGTIN14() {
+        // Generate the first 13 digits randomly
+        let gtinValue = '';
+        for (let i = 0; i < 13; i++) {
+            gtinValue += Math.floor(Math.random() * 10).toString();
+        }
+
+        // Calculate the check digit
+        const gtinMultiplicationArray = [3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3];
+
+        let gtinDigits = gtinValue.split("");
+
+
+        let j = gtinMultiplicationArray.length - 1;
+        let reszultSum = 0;
+        for (let i = gtinDigits.length - 1; i >= 0; i--) {
+            reszultSum = reszultSum + gtinDigits[i] * gtinMultiplicationArray[j];
+            j--;
+        }
+        let validDigit = Math.floor((reszultSum + 10) / 10) * 10 - reszultSum;
+        if (validDigit === 10) {
+            validDigit = 0;
+        }
+
+        gtinValue += validDigit;
+        generatedGTINs.push(gtinValue);
+        return gtinValue;
+    }
+
+    function generateRandomBatchNumber(length = 10) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = '';
+        const charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        generatedBatchNumbers.push(result);
+        return result;
+    }
+
+    const updateProduct = async ()=>{
+        const gtin = generateRandomGTIN14();
+        productDetails.payload.productCode = gtin;
+        await client.updateProduct(gtin, productDetails);
+    }
 
     // Test for updateProduct
     console.log('Testing updateProduct performance...');
-    await measureApiPerformance(client.updateProduct.bind(client), [gtin, productDetails]);
+    await measureApiPerformance(updateProduct.bind(client));
 
-    // Test for addBatch
-    console.log('Testing addBatch performance...');
-    await measureApiPerformance(client.addBatch.bind(client), [gtin, batchNumber, batchDetails]);
 
+    const updateBatch = async ()=>{
+        const gtin = generatedGTINs[Math.floor(Math.random() * generatedGTINs.length)];
+        const batchNumber = generateRandomBatchNumber();
+        batchDetails.payload.productCode = gtin;
+        batchDetails.payload.batchNumber = batchNumber;
+        await client.updateBatch(gtin, batchNumber, batchDetails);
+    }
     // Test for updateBatch
     console.log('Testing updateBatch performance...');
-    await measureApiPerformance(client.updateBatch.bind(client), [gtin, batchNumber, batchDetails]);
+    await measureApiPerformance(updateBatch);
+    //
 
-    // Test for addImage
-    console.log('Testing addImage performance...');
-    await measureApiPerformance(client.addImage.bind(client), [gtin, image]);
-
+    const updateImage = async ()=>{
+        const gtin = generatedGTINs[Math.floor(Math.random() * generatedGTINs.length)];
+        image.payload.productCode = gtin;
+        await client.updateImage(gtin, image);
+    }
     // Test for updateImage
     console.log('Testing updateImage performance...');
-    await measureApiPerformance(client.updateImage.bind(client), [gtin, image]);
-
-    // Test for addProductEPI
-    console.log('Testing addProductEPI performance...');
-    await measureApiPerformance(client.addProductEPI.bind(client), [gtin, language, "leaflet", leafletDetails]);
+    await measureApiPerformance(updateImage);
 
     // Test for updateProductEPI
+    const updateProductEPI = async ()=>{
+        const gtin = generatedGTINs[Math.floor(Math.random() * generatedGTINs.length)];
+        leafletDetails.payload.productCode = gtin;
+        await client.updateProductEPI(gtin, language, "leaflet", leafletDetails);
+    }
     console.log('Testing updateProductEPI performance...');
-    await measureApiPerformance(client.updateProductEPI.bind(client), [gtin, language, "leaflet", leafletDetails]);
+    await measureApiPerformance(updateProductEPI);
 
-    // Test for addBatchEPI
-    leafletDetails.payload.batchNumber = batchNumber;
-    console.log('Testing addBatchEPI performance...');
-    await measureApiPerformance(client.addBatchEPI.bind(client), [gtin, batchNumber, language, "leaflet", leafletDetails]);
-
+    const updateBatchEPI = async ()=>{
+        const gtin = generatedGTINs[Math.floor(Math.random() * generatedGTINs.length)];
+        const batchNumber = generatedBatchNumbers[Math.floor(Math.random() * generatedBatchNumbers.length)];
+        leafletDetails.payload.productCode = gtin;
+        leafletDetails.payload.batchNumber = batchNumber;
+        await client.updateBatchEPI(gtin, batchNumber, language, "leaflet", leafletDetails);
+    }
     // Test for updateBatchEPI
     console.log('Testing updateBatchEPI performance...');
-    await measureApiPerformance(client.updateBatchEPI.bind(client), [gtin, batchNumber, language, "leaflet", leafletDetails]);
+    await measureApiPerformance(updateBatchEPI);
 
     callback();
 }, 1000000);
