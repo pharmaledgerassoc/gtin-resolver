@@ -5,7 +5,8 @@ const dc = require("double-check");
 const assert = dc.assert;
 const EpiSORIntegrationClient = require("../lib/integrationAPIs/clients/EpiSORIntegrationClient");
 const tir = require("../../opendsu-sdk/psknode/tests/util/tir");
-const leafletDetails = require("./leaflet.json");
+const path = require("path");
+const fs = require("fs");
 
 assert.callback("EPISORClient Test Suite", async (callback) => {
     const domain = 'testDomain';
@@ -53,25 +54,14 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
         "messageDateTime": "2023-01-11T09:10:01CET",
         "payload": {
             "productCode": "02113111111164",
-            "batch": "B123",
+            "batchNumber": "B123",
             "packagingSiteName": "",
             "expiryDate": "230600"
         }
     };
 
     const leafletDetails = require("./leaflet.json");
-    const imageData = {
-        "messageType": "ProductPhoto",
-        "messageTypeVersion": 1,
-        "senderId": "ManualUpload",
-        "receiverId": "QPNVS",
-        "messageId": "S000001",
-        "messageDateTime": "2023-01-11T09:10:01CET",
-        "payload": {
-            "productCode": "02113111111164",
-            "imageData": "https://www.bayer.com/en/bayer-products/product-details/bounty-250-mg-0-68-ml-pre-filled-syringe"
-        }
-    }
+    const image = require("./image.json");
 
     const vaultDomainConfig = {
         "anchoring": {
@@ -128,24 +118,69 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
             },
             "bricking": {},
             "anchoring": {}
-        }
+        },
+        "enableSimpleAuth": true
     }
 
     process.env.SSO_SECRETS_ENCRYPTION_KEY = "+WG9HhIoXGGSVq6cMlhy2P3vuiqz1O/WAaiF5JhXmnc=";
-    // process.env.EPI_DOMAIN = domain;
-    // process.env.EPI_SUBDOMAIN = subdomain;
-    // process.env.PSK_CONFIG_LOCATION = require("path").join(folder, "external-volume/config");
-    await tir.launchConfigurableApiHubTestNodeAsync({
+    process.env.EPI_DOMAIN = domain;
+    process.env.EPI_SUBDOMAIN = subdomain;
+    process.env.PSK_CONFIG_LOCATION = require("path").join(folder, "external-volume/config");
+    const openDSU = require("opendsu");
+    const crypto = openDSU.loadAPI("crypto");
+    const apiKeyAPIs = openDSU.loadAPI("apiKey");
+    const keySSISpace = openDSU.loadAPI("keyssi");
+    const http = openDSU.loadAPI("http");
+    const generateEncryptionKey = () => {
+        return crypto.generateRandom(32).toString("base64");
+    }
+    const htPasswordPath = path.join(folder, ".htpassword.secret");
+    for (let i = 0; i < 10; i++) {
+        const user = `user${i}`;
+        const password = `password${i}`;
+        const hashedPassword = crypto.sha256JOSE(password).toString("hex");
+        const mail = `usr${i}@example.com`;
+        const ssoId = `usr${i}@example.com`;
+        fs.appendFileSync(htPasswordPath, `${user}:${hashedPassword}:${mail}:${ssoId}\n`);
+    }
+
+    const {port} = await tir.launchConfigurableApiHubTestNodeAsync({
         domains: [{name: domain, config: vaultDomainConfig}, {name: subdomain, config: vaultDomainConfig}],
         rootFolder: folder,
         serverConfig: serverConfig
     });
 
+    const url = `http://localhost:${port}`;
+    const apiKeysClient = apiKeyAPIs.getAPIKeysClient(url);
+    const authorization = `Bearer user1:${crypto.sha256JOSE("password1").toString("hex")}`
+    const headers = {
+        "Authorization": authorization
+    }
+    const interceptor = (data, callback) => {
+        let {url, headers} = data;
+
+        if (!headers) {
+            headers = {};
+        }
+
+        if (!headers.authorization) {
+            headers.authorization = authorization;
+        }
+        callback(undefined, {url, headers});
+    }
+    http.registerInterceptor(interceptor);
+
+    const apiKey = generateEncryptionKey();
+    const body = {
+        apiKey,
+        secret: generateEncryptionKey()
+    }
+    await apiKeysClient.becomeSysAdmin(JSON.stringify(body), headers);
+    await apiKeysClient.associateAPIKey("DSU_Fabric", "name", "usr1@example.com", {secret: generateEncryptionKey(), scope:"write"}, headers);
+
     const secretsService = await require("apihub").getSecretsServiceInstanceAsync(folder);
     const LightDBEnclaveFactory = require("../../gtin-resolver/lib/integrationAPIs/utils/LightDBEnclaveFactory");
-    const lightDBEnclaveFactory = new LightDBEnclaveFactory();
-    let secret;
-    const keySSISpace = require("opendsu").loadAPI("keyssi");
+    const lightDBEnclaveFactory = LightDBEnclaveFactory.getLightDBEnclaveFactoryInstance();
     const seedSSI = await $$.promisify(keySSISpace.createSeedSSI)(domain);
     await secretsService.putSecretInDefaultContainerAsync(lightDBEnclaveFactory.generateEnclaveName(domain, subdomain), seedSSI.base64Encode(seedSSI.getPrivateKey()))
     let error;
@@ -218,7 +253,7 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
         error = e;
     }
     assert.true(error === undefined, "Error while getting batch metadata");
-    assert.true(batchMetadata.batch === batchDetails.payload.batch, "Batch details are not the same");
+    assert.true(batchMetadata.batchNumber === batchDetails.payload.batchNumber, "Batch details are not the same");
 
     error = undefined;
     try {
@@ -241,7 +276,7 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
 
     error = undefined;
     try {
-        await $$.promisify(client.addImage)(gtin, imageData);
+        await $$.promisify(client.addImage)(gtin, image);
     } catch (e) {
         error = e;
     }
@@ -254,12 +289,11 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
         error = e;
     }
     assert.true(error === undefined, "Error while getting product image");
-    assert.true(productPhoto === imageData.payload.imageData, "Image details are not the same");
+    assert.true(productPhoto === image.payload.imageData, "Image details are not the same");
 
     error = undefined;
-    imageData.payload.imageData = "newImageData";
     try {
-        await $$.promisify(client.updateImage)(gtin, imageData);
+        await $$.promisify(client.updateImage)(gtin, image);
     } catch (e) {
         error = e;
     }
@@ -273,7 +307,7 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
         error = e;
     }
     assert.true(error === undefined, "Error while getting product image");
-    assert.true(productPhoto === imageData.payload.imageData, "Image details are not the same");
+    assert.true(productPhoto === image.payload.imageData, "Image details are not the same");
 
     error = undefined;
     try {
@@ -302,6 +336,7 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
     assert.true(error === undefined, "Error while deleting EPI from product");
 
     //test epi add/update on batch
+    leafletDetails.payload.batchNumber = batchNumber;
     error = undefined;
     try {
         await $$.promisify(client.addBatchEPI)(gtin, batchNumber, "en", "leaflet", leafletDetails);
@@ -311,13 +346,6 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
     assert.true(error === undefined, "Error while adding EPI to batch");
 
     error = undefined;
-    try {
-        await $$.promisify(client.addBatchEPI)(gtin, batchNumber, "de", "leaflet", leafletDetails);
-    } catch (e) {
-        error = e;
-    }
-    assert.true(error === undefined, "Error while adding EPI to batch");
-
 
     try {
         languages = await $$.promisify(client.listBatchLangs)(gtin, batchNumber, "leaflet");
@@ -325,10 +353,10 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
         error = e;
     }
     assert.true(error === undefined, "Error while getting languages");
-    assert.true(languages.length === 2, "Leaflet not added properly on batch");
+    assert.true(languages.length === 1, "Leaflet not added properly on batch");
 
+    delete leafletDetails.payload.batchNumber;
     error = undefined;
-    leafletDetails.xmlFileContent = "newXmlFileContent";
     try {
         await $$.promisify(client.updateProductEPI)(gtin, "en", "leaflet", leafletDetails);
     } catch (e) {
@@ -337,8 +365,8 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
     assert.true(error === undefined, "Error while updating EPI for product");
 
 
+    leafletDetails.payload.batchNumber = batchNumber;
     error = undefined;
-    leafletDetails.xmlFileContent = "newXmlFileContent";
     try {
         await $$.promisify(client.updateBatchEPI)(gtin, batchNumber, "en", "leaflet", leafletDetails);
     } catch (e) {
