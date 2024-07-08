@@ -74,6 +74,9 @@ module.exports = {
     },
     getIntegrationAPIs: function (server) {
         return require("./lib/integrationAPIs")(server);
+    },
+    getHealthCheckAPIs: function (server) {
+        return require("./lib/healthCheckAPIs")(server);
     }
 }
 
