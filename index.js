@@ -68,9 +68,10 @@ module.exports = {
         const MockEPISORClient = require("./lib/integrationAPIs/clients/MockClient");
         return MockEPISORClient.getInstance(domain);
     },
-    getEPISorClient: function (domain, subdomain) {
+    getEPISorClient: function (domain, subdomain, appName) {
         const EPISORClient = require("./lib/integrationAPIs/clients/EpiSORIntegrationClient");
-        return EPISORClient.getInstance(domain, subdomain);
+        appName = appName || "";
+        return EPISORClient.getInstance(domain, subdomain, appName);
     },
     getIntegrationAPIs: function (server) {
         return require("./lib/integrationAPIs")(server);
