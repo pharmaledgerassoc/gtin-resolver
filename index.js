@@ -17,6 +17,7 @@ const logUtils = require("./lib/utils/LogUtils");
 const validationUtils = require("./lib/utils/ValidationUtils");
 const versionTransformer = require("./lib/EpiVersionTransformer")
 const constants = require("./lib/constants/constants");
+const EPISORClient = require("./lib/integrationAPIs/clients/EpiSORIntegrationClient");
 
 module.exports = {
     createGTIN_SSI,
@@ -72,6 +73,10 @@ module.exports = {
         const EPISORClient = require("./lib/integrationAPIs/clients/EpiSORIntegrationClient");
         appName = appName || "";
         return EPISORClient.getInstance(domain, subdomain, appName);
+    },
+    getHealthCheckClient: function () {
+        const HealthCheckClient = require("./lib/healthCheckAPIs/controllers/APIClient");
+        return HealthCheckClient.getInstance();
     },
     getIntegrationAPIs: function (server) {
         return require("./lib/integrationAPIs")(server);
