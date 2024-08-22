@@ -71,7 +71,6 @@ module.exports = {
     },
     getEPISorClient: function (domain, subdomain, appName) {
         const EPISORClient = require("./lib/integrationAPIs/clients/EpiSORIntegrationClient");
-        appName = appName || "";
         return EPISORClient.getInstance(domain, subdomain, appName);
     },
     getHealthCheckClient: function () {
