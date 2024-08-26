@@ -65,10 +65,6 @@ module.exports = {
     getMappingsUtils: function () {
         return require("./lib/utils/CommonUtils");
     },
-    getMockEPISORClient: function (domain) {
-        const MockEPISORClient = require("./lib/integrationAPIs/clients/MockClient");
-        return MockEPISORClient.getInstance(domain);
-    },
     getEPISorClient: function (domain, subdomain, appName) {
         const EPISORClient = require("./lib/integrationAPIs/clients/EpiSORIntegrationClient");
         return EPISORClient.getInstance(domain, subdomain, appName);
