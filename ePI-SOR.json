@@ -1188,15 +1188,10 @@
                 "example": "",
                 "required": "false"
               },
-              "marketingAuthorizationNumber": {
+              "importLicenceNumber": {
                 "type": "string",
                 "example": "",
                 "required": "false"
-              },
-              "dateOfFirstAuthorization": {
-                "type": "string",
-                "example": "",
-                "format": "YYMMDD"
               },
               "strengths": {
                 "type": "array",
@@ -1289,15 +1284,10 @@
                 "example": false,
                 "required": false
               },
-              "marketingAuthorizationNumber": {
+              "importLicenceNumber": {
                 "type": "string",
                 "example": "",
                 "required": "false"
-              },
-              "dateOfFirstAuthorization": {
-                "type": "string",
-                "example": "",
-                "format": "YYMMDD"
               },
               "dateOfManufacturing": {
                 "type": "string",
