@@ -1188,11 +1188,6 @@
                 "example": "",
                 "required": "false"
               },
-              "importLicenceNumber": {
-                "type": "string",
-                "example": "",
-                "required": "false"
-              },
               "strengths": {
                 "type": "array",
                 "required": false,
