@@ -1279,7 +1279,7 @@
                 "example": false,
                 "required": false
               },
-              "importLicenceNumber": {
+              "importLicenseNumber": {
                 "type": "string",
                 "example": "",
                 "required": "false"
