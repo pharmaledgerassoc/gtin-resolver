@@ -386,7 +386,7 @@ const updateBatchExecutionTime = [];
         leafletDetails.payload.productCode = gtin;
         usedGTINsForProductEPI.push(gtin);
         const start = Date.now();
-        await client.updateProductEPI(gtin, language, "leaflet", leafletDetails);
+        await client.updateProductEPI(gtin, language, "leaflet", undefined, leafletDetails);
         const end = Date.now();
         updateProductEPIExecutionTime.push(end - start);
     }
