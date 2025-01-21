@@ -1183,7 +1183,7 @@
                 "example": false,
                 "required": false
               },
-              "genericNameProduct": {
+              "genericName": {
                 "type": "string",
                 "example": "",
                 "required": "false"
