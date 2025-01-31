@@ -1378,11 +1378,6 @@
                 "example": false,
                 "required": false
               },
-              "genericName": {
-                "type": "string",
-                "example": "",
-                "required": "false"
-              },
               "strengths": {
                 "type": "array",
                 "required": false,
