@@ -1,6 +1,6 @@
 {
     "name": "gtin-resolver",
-    "version": "v2.0.0",
+    "version": "4.0.0-rc4",
     "description": "",
     "main": "index.js",
     "scripts": {
