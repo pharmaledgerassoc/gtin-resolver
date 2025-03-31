@@ -7,6 +7,10 @@
       "src": "",
       "actions": [
         {
+            "type": "execute",
+            "cmd": "cd ../ && npm run patch-lwa-xml-parser"
+        },
+        {
           "type": "execute",
           "cmd": "node ../opendsu-sdk/psknode/bin/scripts/pskbuild.js --source=./../ --projectMap=./build/build.json  --prod=true --output=./build/bundles"
         },
@@ -18,3 +22,4 @@
     }
   ]
 }
+
