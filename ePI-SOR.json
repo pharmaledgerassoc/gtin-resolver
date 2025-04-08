@@ -1,4 +1,4 @@
-{
+ {
   "openapi": "3.0.3",
   "info": {
     "title": "ePI SOR Integration",
@@ -166,8 +166,66 @@
         "tags": [
           "Products"
         ],
-        "summary": "Add a new ePI or Update the ePI of a Product",
-        "description": "Adds or updates an ePI of an existing product.",
+        "summary": "Add a new ePI of a Product",
+        "description": "Adds ePI of an existing product.",
+        "operationId": "addEPItoProduct",
+        "parameters": [
+          {
+            "name": "gtin",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "language",
+            "in": "path",
+            "description": "The language code of the ePI.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epiType",
+            "in": "path",
+            "description": "leaflet.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Add a new leaflet",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Leaflet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Update the ePI of a Product",
+        "description": "Updates an ePI of an existing product.",
         "operationId": "addEPItoProduct",
         "parameters": [
           {
@@ -269,6 +327,199 @@
         }
       }
     },
+    "/integration/epi/{gtin}/{language}/{epiType}/{epiMarket}": {
+      "post": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Add a new ePI of a Product for a specific market",
+        "description": "Adds a market ePI of an existing product.",
+        "operationId": "addMarketEPItoProduct",
+        "parameters": [
+          {
+            "name": "gtin",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "language",
+            "in": "path",
+            "description": "The language code of the ePI.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epiType",
+            "in": "path",
+            "description": "leaflet.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epiMarket",
+            "in": "path",
+            "description": "the leaflet market as alpha-2 country code.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Add a new leaflet",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Leaflet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Update the ePI of a Product for a specific market",
+        "description": "Updates a market ePI of an existing product.",
+        "operationId": "addMarketEPItoProduct",
+        "parameters": [
+          {
+            "name": "gtin",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "language",
+            "in": "path",
+            "description": "The language code of the ePI.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epiType",
+            "in": "path",
+            "description": "leaflet.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epiMarket",
+            "in": "path",
+            "description": "the leaflet market as alpha-2 country code.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Add a new leaflet",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Leaflet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Delete a market ePI from a Product",
+        "description": "Deletes a market ePI from the current version of an existing product.",
+        "operationId": "deleteMarketEPIofProduct",
+        "parameters": [
+          {
+            "name": "gtin",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "language",
+            "in": "path",
+            "description": "The language code of the ePI.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epiType",
+            "in": "path",
+            "description": "leaflet",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epiMarket",
+            "in": "path",
+            "description": "the leaflet market as alpha-2 country code",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation"
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          }
+        }
+      }
+    },
     "/integration/epi/{gtin}/{language}/{epiType}/[?version={epiVersion}]": {
       "get": {
         "tags": [
@@ -277,6 +528,75 @@
         "summary": "Retrieve a leaflet from a product",
         "description": "Retrieves the XML and images that compose the ePI of a product for a specific language and type.",
         "operationId": "getProductLeaflet",
+        "parameters": [
+          {
+            "name": "gtin",
+            "in": "path",
+            "description": "Global Trade Item Number of Product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "language",
+            "in": "path",
+            "description": "The language code of the ePI",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epiType",
+            "in": "path",
+            "description": "leaflet",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "description": "Version of the product",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Leaflet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Parameter"
+          },
+          "404": {
+            "description": "Leaflet not found"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/integration/epi/{gtin}/{language}/{epiType}/{epiMarket}[?version={epiVersion}]": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Retrieve a leaflet from a product for a specific market",
+        "description": "Retrieves the XML and images that compose the ePI of a product for a specific language, type and market.",
+        "operationId": "getProductLeafletFromMarket",
         "parameters": [
           {
             "name": "gtin",
@@ -1178,6 +1498,11 @@
                 "example": "",
                 "required": false
               },
+              "productRecall": {
+                "type": "boolean",
+                "example": false,
+                "required": false
+              },
               "strengths": {
                 "type": "array",
                 "required": false,
@@ -1264,6 +1589,51 @@
                 "example": "",
                 "format": "YYMMDD"
               },
+              "batchRecall": {
+                "type": "boolean",
+                "example": false,
+                "required": false
+              },
+              "importLicenseNumber": {
+                "type": "string",
+                "example": "",
+                "required": "false"
+              },
+              "dateOfManufacturing": {
+                "type": "string",
+                "example": "",
+                "format": "YYMMDD"
+              },
+              "manufacturerName": {
+                "type": "string",
+                "example": "",
+                "required": "false"
+              },
+              "manufacturerAddress1": {
+                "type": "string",
+                "example": "",
+                "required": "false"
+              },
+              "manufacturerAddress2": {
+                "type": "string",
+                "example": "",
+                "required": "false"
+              },
+              "manufacturerAddress3": {
+                "type": "string",
+                "example": "",
+                "required": "false"
+              },
+              "manufacturerAddress4": {
+                "type": "string",
+                "example": "",
+                "required": "false"
+              },
+              "manufacturerAddress5": {
+                "type": "string",
+                "example": "",
+                "required": "false"
+              },
               "packagingSiteName": {
                 "type": "string",
                 "required": false,
@@ -1306,6 +1676,11 @@
               },
               "batchNumber": {
                 "type": "string",
+                "example": ""
+              },
+              "ePIMarket": {
+                "type": "string",
+                "nullable": true,
                 "example": ""
               },
               "xmlFileContent": {

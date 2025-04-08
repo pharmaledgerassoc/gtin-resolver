@@ -17,6 +17,7 @@ const logUtils = require("./lib/utils/LogUtils");
 const validationUtils = require("./lib/utils/ValidationUtils");
 const versionTransformer = require("./lib/EpiVersionTransformer")
 const constants = require("./lib/constants/constants");
+const EPISORClient = require("./lib/integrationAPIs/clients/EpiSORIntegrationClient");
 
 module.exports = {
     createGTIN_SSI,
@@ -54,6 +55,9 @@ module.exports = {
     getGTINOwner: function (server) {
         return require("./lib/gtinOwner").getGTINOwner(server);
     },
+    getMetadata: function (server) {
+        return require("./lib/metadata").getMetadata(server);
+    },
     getMessagesPipe: function () {
         const opendsu = require("opendsu");
         return opendsu.loadApi("m2dsu").getMessagesPipe();
@@ -64,16 +68,19 @@ module.exports = {
     getMappingsUtils: function () {
         return require("./lib/utils/CommonUtils");
     },
-    getMockEPISORClient: function (domain) {
-        const MockEPISORClient = require("./lib/integrationAPIs/clients/MockClient");
-        return MockEPISORClient.getInstance(domain);
-    },
-    getEPISorClient: function (domain, subdomain) {
+    getEPISorClient: function (domain, subdomain, appName) {
         const EPISORClient = require("./lib/integrationAPIs/clients/EpiSORIntegrationClient");
-        return EPISORClient.getInstance(domain, subdomain);
+        return EPISORClient.getInstance(domain, subdomain, appName);
+    },
+    getHealthCheckClient: function () {
+        const HealthCheckClient = require("./lib/healthCheckAPIs/controllers/APIClient");
+        return HealthCheckClient.getInstance();
     },
     getIntegrationAPIs: function (server) {
         return require("./lib/integrationAPIs")(server);
+    },
+    getHealthCheckAPIs: function (server) {
+        return require("./lib/healthCheckAPIs")(server);
     }
 }
 

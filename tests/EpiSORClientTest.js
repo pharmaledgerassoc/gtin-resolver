@@ -311,7 +311,7 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
 
     error = undefined;
     try {
-        await $$.promisify(client.addProductEPI)(gtin, "en", "leaflet", leafletDetails);
+        await $$.promisify(client.addProductEPI)(gtin, "en", "leaflet", undefined, leafletDetails);
     } catch (e) {
         error = e;
     }
@@ -329,7 +329,7 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
 
     error = undefined;
     try {
-        await $$.promisify(client.deleteProductEPI)(gtin, "en", "leaflet");
+        await $$.promisify(client.deleteProductEPI)(gtin, "en", "leaflet", undefined);
     } catch (e) {
         error = e;
     }
@@ -358,7 +358,7 @@ assert.callback("EPISORClient Test Suite", async (callback) => {
     delete leafletDetails.payload.batchNumber;
     error = undefined;
     try {
-        await $$.promisify(client.updateProductEPI)(gtin, "en", "leaflet", leafletDetails);
+        await $$.promisify(client.updateProductEPI)(gtin, "en", "leaflet", undefined, leafletDetails);
     } catch (e) {
         error = e;
     }
