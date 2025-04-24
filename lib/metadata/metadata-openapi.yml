@@ -1,0 +1,425 @@
+openapi: 3.0.0
+info:
+  title: Leaflet Metadata API
+  description: API for retrieving leaflet metadata
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+  - url: https://mah1.preqa.pladevs.com
+    description: MAH1 PreQA Server
+  - url: https://mah1.qa.pladevs.com
+    description: MAH1 QA Server
+
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+          example: "002"
+
+    BatchData:
+      type: object
+      description: >-
+        Detailed batch-specific information.
+        Only returned when the batchNumber parameter is provided.
+      properties:
+        productCode:
+          type: string
+          example: "99456789010121"
+        batchNumber:
+          type: string
+          example: "B2025XZ"
+        epiProtocol:
+          type: string
+          example: "v1"
+        lockId:
+          type: string
+          example: "3wRXHqN56ecLTtQbPY5caqR1N5iJQp8jXPzxsPU5WPws"
+        expiryDate:
+          type: string
+          example: "251231"  # 31/12/2025
+        batchRecall:
+          type: boolean
+          example: false
+        packagingSiteName:
+          type: string
+          example: "PharmaPack Solutions GmbH"
+        importLicenseNumber:
+          type: string
+          example: "IMPORT-789456-BR"
+        manufacturerName:
+          type: string
+          example: "Global Pharmaceuticals SA"
+        dateOfManufacturing:
+          type: string
+          example: "230601"  # 01/06/2023
+        manufacturerAddress1:
+          type: string
+          example: "Industriestrasse 45"
+        manufacturerAddress2:
+          type: string
+          example: "Pharma Park, Building C"
+        manufacturerAddress3:
+          type: string
+          example: "Floor 3, Department B"
+        manufacturerAddress4:
+          type: string
+          example: "Section 2.1"
+        manufacturerAddress5:
+          type: string
+          example: "Basel, 4057, Switzerland"
+      required:
+        - productCode
+        - batchNumber
+        - expiryDate
+      nullable: true
+
+    StrengthItem:
+      type: object
+      properties:
+        substance:
+          type: string
+          description: Active pharmaceutical ingredient
+          example: "Paracetamol"
+        strength:
+          type: string
+          description: Dosage strength with unit
+          example: "100mg"
+      required:
+        - strength
+
+    MarketItem:
+      type: object
+      properties:
+        marketId:
+          type: string
+          description: ISO country code of the market
+          example: "IN"
+        nationalCode:
+          type: string
+          description: National product code
+          example: "NPL123"
+        mahName:
+          type: string
+          description: Marketing Authorization Holder name
+          example: "IndiaMAH"
+        legalEntityName:
+          type: string
+          description: Legal entity name
+          example: "IndiaMAHEntity"
+        mahAddress:
+          type: string
+          description: MAH registered address (HTML escaped)
+          example: "456 Pharma Avenue"
+      required:
+        - marketId
+
+    ProductData:
+      type: object
+      properties:
+        productCode:
+          type: string
+          example: "99456789010121"
+        epiProtocol:
+          type: string
+          example: "v1"
+        lockId:
+          type: string
+          example: "6Mf6jMHuXHpv15yfbRQu9YjvuB3GgqV5cRFsWjtQEL3x"
+        internalMaterialCode:
+          type: string
+          example: "INC_PROD_001"
+        inventedName:
+          type: string
+          example: "PharmaProduct"
+        nameMedicinalProduct:
+          type: string
+          example: "PharmaMedicinalProduct"
+        productRecall:
+          type: boolean
+          example: false
+        strengths:
+          type: array
+          items:
+            $ref: '#/components/schemas/StrengthItem'
+        markets:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarketItem'
+        productPhoto:
+          type: string
+          example: "./assets/icons/product_image_placeholder.svg"
+        batchData:
+          type: object
+          nullable: true
+      required:
+        - productCode
+        - inventedName
+        - nameMedicinalProduct
+
+    LanguageItem:
+      type: object
+      properties:
+        label:
+          type: string
+          example: "Arabic"
+        value:
+          type: string
+          example: "ar"
+        nativeName:
+          type: string
+          example: "العربية"
+
+    DocumentType:
+      type: object
+      description: >-
+        Dynamic keys represent epi market, as a country code in ISO 3166-1 alpha-2 format (e.g. "PT", "BR").
+        Special key "unspecified" is used for documents not tied to a specific market.
+      properties:
+        unspecified:
+          type: array
+          items:
+            $ref: '#/components/schemas/LanguageItem'
+      additionalProperties: # This catches all dynamic country codes
+        type: array
+        items:
+          $ref: '#/components/schemas/LanguageItem'
+      x-patternProperties:
+        '^[A-Z]{2}$':
+          description: ISO 3166-1 alpha-2 country code
+      examples:
+        countryExample:
+          description: Example with country-specific languages
+          value:
+            unspecified:
+              - label: English
+                value: en
+                nativeName: English
+            US:
+              - label: English
+                value: en
+                nativeName: English
+              - label: Spanish
+                value: es
+                nativeName: Español
+            BR:
+              - label: Portuguese
+                value: pt
+                nativeName: Português
+
+    MetadataResponse:
+      type: object
+      properties:
+        productData:
+          $ref: '#/components/schemas/ProductData'
+        batchData:
+          $ref: '#/components/schemas/BatchData'
+        availableDocuments:
+          type: object
+          description: >-
+            Contains document types with their available languages.
+            Possible keys: "leaflet", "prescribingInfo", or empty if no documents available.
+          properties:
+            leaflet:
+              $ref: '#/components/schemas/DocumentType'
+              nullable: true
+            prescribingInfo:
+              $ref: '#/components/schemas/DocumentType'
+              nullable: true
+              additionalProperties: false
+
+paths:
+  /metadata/leaflet/{domain}:
+    get:
+      summary: Get leaflet metadata by domain and GTIN
+      description: Retrieves leaflet metadata with validation of GTIN and optional batch number
+      operationId: getDSUMetadataHandler
+      parameters:
+        - name: domain
+          in: path
+          description: The EPI domain identifier
+          required: true
+          schema:
+            type: string
+            example: "local.epi"
+        - name: gtin
+          in: query
+          description: 14-digit GTIN number
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{14}$'
+            example: "99456789010121"
+        - name: batch
+          in: query
+          description: Batch number (optional)
+          required: false
+          schema:
+            type: string
+            nullable: true
+      responses:
+        '200':
+          description: Successfully retrieved leaflet metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetadataResponse'
+              example:
+                productData:
+                  productCode: "99456789010121"
+                  epiProtocol: "v1"
+                  lockId: "6Mf6jMHuXHpv15yfbRQu9YjvuB3GgqV5cRFsWjtQEL3x"
+                  internalMaterialCode: ""
+                  inventedName: "AAA"
+                  nameMedicinalProduct: "BBB"
+                  productRecall: false
+                  strengths: []
+                  markets: []
+                  productPhoto: "./assets/icons/product_image_placeholder.svg"
+                  batchData: null
+                availableDocuments:
+                  leaflet:
+                    unspecified:
+                      - label: "English"
+                        value: "en"
+                        nativeName: "English"
+                    AT:
+                      - label: "English"
+                        value: "en"
+                        nativeName: "English"
+                      - label: "Arabic"
+                        value: "ar"
+                        nativeName: "العربية"
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingGtin:
+                  value:
+                    code: "002"
+                invalidGtin:
+                  value:
+                    code: "003"
+                unknownProduct:
+                  value:
+                    code: "001"
+        '500':
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Internal server error occurred"
+        '529':
+          description: Server busy processing request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Server busy finding metadata"
+
+  /metadata/leaflet/{domain}/{subdomain}:
+    get:
+      summary: Internal metadata redirection endpoint
+      description: Internal endpoint that handles subdomain redirection. Backward compatibility.
+      operationId: redirectMetadataRequest
+      parameters:
+        - name: domain
+          in: path
+          description: The EPI domain identifier
+          required: true
+          schema:
+            type: string
+            example: "local.epi"
+        - name: subdomain
+          in: path
+          description: The EPI subdomain identifier
+          required: true
+          schema:
+            type: string
+            example: "local.epi.sub"
+        - name: gtin
+          in: query
+          description: 14-digit GTIN number
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{14}$'
+            example: "99456789010121"
+        - name: batch
+          in: query
+          description: Batch number (optional)
+          required: false
+          schema:
+            type: string
+            nullable: true
+      responses:
+        '200':
+          description: Successfully retrieved leaflet metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetadataResponse'
+              example:
+                productData:
+                  productCode: "99456789010121"
+                  epiProtocol: "v1"
+                  lockId: "6Mf6jMHuXHpv15yfbRQu9YjvuB3GgqV5cRFsWjtQEL3x"
+                  internalMaterialCode: ""
+                  inventedName: "AAA"
+                  nameMedicinalProduct: "BBB"
+                  productRecall: false
+                  strengths: []
+                  markets: []
+                  productPhoto: "./assets/icons/product_image_placeholder.svg"
+                  batchData: null
+                availableDocuments:
+                  leaflet:
+                    unspecified:
+                      - label: "English"
+                        value: "en"
+                        nativeName: "English"
+                    AT:
+                      - label: "English"
+                        value: "en"
+                        nativeName: "English"
+                      - label: "Arabic"
+                        value: "ar"
+                        nativeName: "العربية"
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingGtin:
+                  value:
+                    code: "002"
+                invalidGtin:
+                  value:
+                    code: "003"
+                unknownProduct:
+                  value:
+                    code: "001"
+        '500':
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Internal server error occurred"
+        '529':
+          description: Server busy processing request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Server busy finding metadata"
